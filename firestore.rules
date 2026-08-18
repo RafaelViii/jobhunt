@@ -1,0 +1,76 @@
+rules_version = '2';
+
+// CLAUDE.md §8. This app's actual enforcement for cross-user reads (a
+// recruiter viewing a matched applicant's profile/resume, updating an
+// application's status, etc.) happens in Server Components/Actions using
+// the Firebase Admin SDK (lib/matching/queries.ts, lib/applications/queries.ts,
+// lib/auth/company.ts's recruiterOwnsJob) — which always bypasses these rules
+// by design, per §3's "server-privileged writes" architecture. This app never
+// uses the client Firestore SDK for cross-user data (grep lib/firebase/client.ts's
+// getFirebaseDb — it's exported but unused). These rules exist as the
+// declarative backstop for that client SDK path, not as the primary
+// enforcement mechanism.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isCompanyRecruiter(companyId) {
+      return isSignedIn() &&
+        request.auth.uid in get(/databases/$(database)/documents/companies/$(companyId)).data.recruiterUids;
+    }
+
+    // Written once, server-side, at signup (/api/auth/register via the
+    // Admin SDK, which sets both this doc and the role custom claim
+    // together). Never client-writable.
+    match /users/{uid} {
+      allow read: if isOwner(uid);
+      allow write: if false;
+    }
+
+    match /applicantProfiles/{uid} {
+      allow read, create, update, delete: if isOwner(uid);
+
+      // Deliberately no recruiter read path here. Firestore rules can't
+      // express "the recruiter owns *some* job this applicant matched"
+      // without either iterating an unbounded set of jobs (rules can't
+      // loop) or denormalizing extra lookup docs solely for rules —
+      // deliberately not done, to avoid schema drift from CLAUDE.md §4.
+      // See this file's header comment and jobhuntbuildpath.md 5.1.
+    }
+
+    match /companies/{companyId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.auth.uid in request.resource.data.recruiterUids;
+      allow update, delete: if isSignedIn() && request.auth.uid in resource.data.recruiterUids;
+    }
+
+    match /jobs/{jobId} {
+      allow read: if true; // public listings
+      allow create: if isCompanyRecruiter(request.resource.data.companyId);
+      allow update, delete: if isCompanyRecruiter(resource.data.companyId);
+    }
+
+    match /applications/{applicationId} {
+      allow read: if isSignedIn() && resource.data.applicantUid == request.auth.uid;
+      allow read: if isCompanyRecruiter(resource.data.companyId);
+      allow create: if isSignedIn() && request.auth.uid == request.resource.data.applicantUid;
+      // Status updates happen via the Admin SDK (recruiter Server Action) —
+      // no client-side update/delete rule is granted to either role.
+    }
+
+    match /matches/{matchId} {
+      allow write: if false; // server-write-only (Admin SDK) — CLAUDE.md §8
+      allow read: if isSignedIn() && (
+        resource.data.applicantUid == request.auth.uid ||
+        isCompanyRecruiter(resource.data.companyId)
+      );
+    }
+  }
+}

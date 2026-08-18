@@ -1,0 +1,17 @@
+[
+  ["Frontend Engineer", "Frontend Developer", "UI Engineer"],
+  ["Backend Engineer", "Backend Developer", "Server Engineer"],
+  ["Full-Stack Developer", "Full Stack Engineer", "Full-Stack Engineer", "Senior Full-Stack Developer"],
+  ["Data Analyst", "Business Analyst", "Reporting Analyst"],
+  ["Data Scientist", "ML Engineer", "Machine Learning Engineer"],
+  ["Data Engineer", "ETL Engineer", "Analytics Engineer"],
+  ["DevOps Engineer", "Site Reliability Engineer", "Infrastructure Engineer", "Platform Engineer"],
+  ["Cloud Support Engineer", "Technical Support", "Junior Cloud Support Engineer", "Cloud Support Associate"],
+  ["Product Designer", "UI Designer", "UX/UI Designer"],
+  ["UX Researcher", "User Researcher", "Design Researcher"],
+  ["iOS Engineer", "Mobile Engineer", "iOS Developer", "Mobile Engineer (iOS)"],
+  ["QA Engineer", "Test Engineer", "QA Analyst", "Software Tester"],
+  ["Software Engineer", "Software Developer", "Junior Developer", "Programmer"],
+  ["Marketing Specialist", "Growth Marketer", "Digital Marketer"],
+  ["HR Generalist", "People Ops", "HR Coordinator"]
+]
