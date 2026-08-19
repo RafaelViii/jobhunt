@@ -1,14 +1,12 @@
 import Link from "next/link";
 import { requireSession } from "@/lib/auth/dal";
-import { adminDb } from "@/lib/firebase/admin";
 import { getApplicationsForApplicant } from "@/lib/applications/queries";
 import { Avatar } from "@/components/nav/Avatar";
 import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { InboxIcon } from "@/components/ui/icons";
-import { SidebarCard } from "@/components/nav/SidebarCard";
-import type { ApplicantProfileDoc, ApplicationStatus } from "@/lib/types";
+import type { ApplicationStatus } from "@/lib/types";
 
 const STATUS_LABELS: Record<ApplicationStatus, string> = {
   submitted: "Submitted",
@@ -28,38 +26,25 @@ const STATUS_TONES: Record<ApplicationStatus, "neutral" | "brand" | "success" | 
 
 export default async function ApplicantApplicationsPage() {
   const session = await requireSession("applicant");
-  const [applications, profileSnap] = await Promise.all([
-    getApplicationsForApplicant(session.uid),
-    adminDb().collection("applicantProfiles").doc(session.uid).get(),
-  ]);
-  const profile = profileSnap.exists ? (profileSnap.data() as ApplicantProfileDoc) : null;
+  const applications = await getApplicationsForApplicant(session.uid);
 
   return (
-    <div className="mx-auto flex max-w-5xl gap-6 px-4 py-8">
-      <aside className="hidden w-64 shrink-0 lg:block">
-        <div className="sticky top-20">
-          <SidebarCard
-            name={profile?.basicInfo.name || session.email || "Account"}
-            subtitle={profile?.basicInfo.location}
-            photoUrl={profile?.basicInfo.photoUrl}
-            meta={[{ label: "Applications", value: String(applications.length) }]}
-            links={[{ href: "/applicant/profile", label: "Edit profile" }]}
-          />
-        </div>
-      </aside>
+    <div className="mx-auto max-w-6xl px-4 py-8">
+      <h1 className="text-2xl font-bold text-ink">My applications</h1>
+      <p className="mt-1 text-sm text-muted">
+        {applications.length} {applications.length === 1 ? "application" : "applications"} submitted
+      </p>
 
-      <main className="flex min-w-0 flex-1 flex-col gap-6">
-        <h1 className="text-2xl font-bold text-ink">My applications</h1>
+      {applications.length === 0 && (
+        <EmptyState
+          icon={<InboxIcon className="h-12 w-12" />}
+          title="No applications yet"
+          description="Apply to a matched job and it'll show up here with its status."
+        />
+      )}
 
-        {applications.length === 0 && (
-          <EmptyState
-            icon={<InboxIcon className="h-12 w-12" />}
-            title="No applications yet"
-            description="Apply to a matched job and it'll show up here with its status."
-          />
-        )}
-
-        <div className="flex flex-col gap-3">
+      {applications.length > 0 && (
+        <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
           {applications.map((application) => (
             <Link key={application.applicationId} href={`/applicant/jobs/${application.jobId}`}>
               <Card className="transition-colors hover:border-brand hover:shadow-md">
@@ -103,7 +88,7 @@ export default async function ApplicantApplicationsPage() {
             </Link>
           ))}
         </div>
-      </main>
+      )}
     </div>
   );
 }
