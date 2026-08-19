@@ -1,0 +1,80 @@
+import Link from "next/link";
+import { Avatar } from "@/components/nav/Avatar";
+import { Card } from "@/components/ui/Card";
+import { Chip } from "@/components/ui/Chip";
+
+export type SidebarLink = { href: string; label: string };
+
+export function SidebarCard({
+  name,
+  subtitle,
+  photoUrl,
+  meta,
+  experience,
+  links = [],
+}: {
+  name: string;
+  subtitle?: string | null;
+  photoUrl?: string | null;
+  meta?: { label: string; value: string }[];
+  experience?: { title: string; company: string; period?: string; current?: boolean } | null;
+  links?: SidebarLink[];
+}) {
+  return (
+    <Card className="overflow-hidden p-0">
+      <div className="h-14 bg-gradient-to-r from-brand to-brand-dark" />
+      <div className="flex flex-col items-center px-4 pb-4 text-center">
+        <div className="-mt-8 mb-2 rounded-full ring-4 ring-surface">
+          <Avatar name={name} photoUrl={photoUrl} size={64} />
+        </div>
+        <p className="font-semibold text-ink">{name}</p>
+        {subtitle && <p className="mt-0.5 text-xs text-muted">{subtitle}</p>}
+      </div>
+
+      {meta && meta.length > 0 && (
+        <div className="flex flex-col gap-1.5 border-t border-line px-4 py-3">
+          {meta.map((row) => (
+            <div key={row.label} className="flex justify-between gap-2 text-xs">
+              <span className="text-muted">{row.label}</span>
+              <span className="truncate text-right font-medium text-ink">{row.value}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {experience && (
+        <div className="border-t border-line px-4 py-3">
+          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted">Experience</p>
+          <div className="rounded-md border border-line p-2.5">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-sm font-semibold text-ink">{experience.title}</p>
+              {experience.current && (
+                <Chip tone="brand" className="shrink-0">
+                  Current
+                </Chip>
+              )}
+            </div>
+            <p className="mt-0.5 text-xs text-muted">
+              {experience.company}
+              {experience.period ? ` · ${experience.period}` : ""}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {links.length > 0 && (
+        <div className="border-t border-line">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="block px-4 py-2.5 text-sm font-medium text-ink hover:bg-page"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </Card>
+  );
+}
