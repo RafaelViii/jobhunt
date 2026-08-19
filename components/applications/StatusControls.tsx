@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { updateApplicationStatus } from "@/app/recruiter/jobs/[jobId]/candidates/actions";
 import type { ApplicationStatus } from "@/lib/types";
 
-const STATUSES: ApplicationStatus[] = ["submitted", "shortlisted", "interview", "offer", "rejected"];
+const STATUSES: ApplicationStatus[] = ["submitted", "shortlisted", "interview", "rejected"];
 
 export function StatusControls({
   applicationId,

@@ -12,7 +12,6 @@ const STATUS_LABELS: Record<ApplicationStatus, string> = {
   submitted: "Submitted",
   shortlisted: "Shortlisted",
   interview: "Interview",
-  offer: "Offer",
   rejected: "Rejected",
 };
 
@@ -20,7 +19,6 @@ const STATUS_TONES: Record<ApplicationStatus, "neutral" | "brand" | "success" | 
   submitted: "neutral",
   shortlisted: "brand",
   interview: "brand",
-  offer: "success",
   rejected: "danger",
 };
 

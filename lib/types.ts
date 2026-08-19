@@ -72,7 +72,7 @@ export type CompanyDoc = {
 
 export type JobStatus = "open" | "closed";
 
-export type ApplicationStatus = "submitted" | "shortlisted" | "interview" | "offer" | "rejected";
+export type ApplicationStatus = "submitted" | "shortlisted" | "interview" | "rejected";
 
 export type ApplicationStatusEvent = {
   status: ApplicationStatus;

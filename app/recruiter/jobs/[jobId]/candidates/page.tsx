@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireSession } from "@/lib/auth/dal";
 import { recruiterOwnsJob } from "@/lib/auth/company";
@@ -13,10 +14,25 @@ import { Avatar } from "@/components/nav/Avatar";
 import { SidebarCard } from "@/components/nav/SidebarCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PeopleIcon } from "@/components/ui/icons";
-import type { CompanyDoc, JobDoc } from "@/lib/types";
+import type { ApplicationStatus, CompanyDoc, JobDoc } from "@/lib/types";
 
-export default async function JobCandidatesPage({ params }: { params: Promise<{ jobId: string }> }) {
+const STATUS_LABELS: Record<ApplicationStatus, string> = {
+  submitted: "Submitted",
+  shortlisted: "Shortlisted",
+  interview: "Interview",
+  rejected: "Rejected",
+};
+const STATUS_FILTERS: ApplicationStatus[] = ["submitted", "shortlisted", "interview", "rejected"];
+
+export default async function JobCandidatesPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ jobId: string }>;
+  searchParams: Promise<{ status?: string }>;
+}) {
   const { jobId } = await params;
+  const { status: statusParam } = await searchParams;
   const session = await requireSession("recruiter");
 
   const jobSnap = await adminDb().collection("jobs").doc(jobId).get();
@@ -53,8 +69,15 @@ export default async function JobCandidatesPage({ params }: { params: Promise<{ 
       candidate.application !== null,
   );
 
+  const activeStatus = STATUS_FILTERS.includes(statusParam as ApplicationStatus)
+    ? (statusParam as ApplicationStatus)
+    : null;
+  const visibleApplicants = activeStatus
+    ? applicants.filter((candidate) => candidate.application.status === activeStatus)
+    : applicants;
+
   return (
-    <div className="mx-auto flex max-w-5xl gap-6 px-4 py-8">
+    <div className="mx-auto max-w-7xl px-4 py-8 lg:flex lg:gap-6">
       <aside className="hidden w-64 shrink-0 lg:block">
         <div className="sticky top-20">
           <SidebarCard
@@ -73,11 +96,38 @@ export default async function JobCandidatesPage({ params }: { params: Promise<{ 
         </div>
       </aside>
 
-      <main className="flex min-w-0 flex-1 flex-col gap-6">
+      <main className="mt-6 flex min-w-0 flex-1 flex-col gap-6 lg:mt-0">
         <div>
           <h1 className="text-2xl font-bold text-ink">{job.title}</h1>
           <p className="mt-1 text-sm text-muted">{applicants.length} applicant{applicants.length === 1 ? "" : "s"}</p>
         </div>
+
+        {applicants.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            <Link
+              href={`/recruiter/jobs/${jobId}/candidates`}
+              className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+                activeStatus === null ? "bg-brand text-white" : "bg-page text-muted hover:bg-brand-soft hover:text-brand"
+              }`}
+            >
+              All ({applicants.length})
+            </Link>
+            {STATUS_FILTERS.map((status) => {
+              const count = applicants.filter((c) => c.application.status === status).length;
+              return (
+                <Link
+                  key={status}
+                  href={`/recruiter/jobs/${jobId}/candidates?status=${status}`}
+                  className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+                    activeStatus === status ? "bg-brand text-white" : "bg-page text-muted hover:bg-brand-soft hover:text-brand"
+                  }`}
+                >
+                  {STATUS_LABELS[status]} ({count})
+                </Link>
+              );
+            })}
+          </div>
+        )}
 
         {applicants.length === 0 && (
           <EmptyState
@@ -87,8 +137,16 @@ export default async function JobCandidatesPage({ params }: { params: Promise<{ 
           />
         )}
 
-        <div className="flex flex-col gap-3">
-          {applicants.map((candidate) => (
+        {applicants.length > 0 && visibleApplicants.length === 0 && (
+          <EmptyState
+            icon={<PeopleIcon className="h-12 w-12" />}
+            title={`No ${STATUS_LABELS[activeStatus as ApplicationStatus].toLowerCase()} applicants`}
+            description="Try a different filter above."
+          />
+        )}
+
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          {visibleApplicants.map((candidate) => (
             <Card key={candidate.matchId}>
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
