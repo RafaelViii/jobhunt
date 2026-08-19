@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useOptimistic, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { updateApplicationStatus } from "@/app/recruiter/jobs/[jobId]/candidates/actions";
 import type { ApplicationStatus } from "@/lib/types";
@@ -15,17 +15,21 @@ export function StatusControls({
   currentStatus: ApplicationStatus;
 }) {
   const router = useRouter();
-  const [pending, setPending] = useState<ApplicationStatus | null>(null);
+  const [optimisticStatus, setOptimisticStatus] = useOptimistic(currentStatus);
+  const [isPending, startTransition] = useTransition();
 
-  async function handleChange(status: ApplicationStatus) {
-    if (status === currentStatus || pending) return;
-    setPending(status);
-    try {
+  function handleChange(status: ApplicationStatus) {
+    if (status === optimisticStatus || isPending) return;
+    // The clicked button highlights immediately (useOptimistic), instead of
+    // waiting on router.refresh() — which re-runs the whole candidates page
+    // (matches + applications + company + a signed resume URL per
+    // applicant) just to reflect one status pill. That round trip still
+    // happens, in the background, to keep the filter-tab counts correct.
+    startTransition(async () => {
+      setOptimisticStatus(status);
       await updateApplicationStatus(applicationId, status);
       router.refresh();
-    } finally {
-      setPending(null);
-    }
+    });
   }
 
   return (
@@ -35,9 +39,9 @@ export function StatusControls({
           key={status}
           type="button"
           onClick={() => handleChange(status)}
-          disabled={pending !== null}
+          disabled={isPending}
           className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize transition-colors disabled:opacity-50 ${
-            status === currentStatus ? "bg-brand text-white" : "bg-page text-muted hover:bg-brand-soft hover:text-brand"
+            status === optimisticStatus ? "bg-brand text-white" : "bg-page text-muted hover:bg-brand-soft hover:text-brand"
           }`}
         >
           {status}
