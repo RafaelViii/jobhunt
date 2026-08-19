@@ -1,7 +1,6 @@
 import { requireSession } from "@/lib/auth/dal";
 import { adminDb } from "@/lib/firebase/admin";
 import { AppNav } from "@/components/nav/AppNav";
-import { GlobalBackButton } from "@/components/nav/GlobalBackButton";
 import type { ApplicantProfileDoc } from "@/lib/types";
 
 export default async function ApplicantLayout({ children }: { children: React.ReactNode }) {
@@ -23,7 +22,6 @@ export default async function ApplicantLayout({ children }: { children: React.Re
         profileHref="/applicant/profile"
       />
       {children}
-      <GlobalBackButton dashboardHref="/applicant/dashboard" />
     </>
   );
 }

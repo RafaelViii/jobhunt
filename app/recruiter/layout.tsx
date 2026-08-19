@@ -1,7 +1,6 @@
 import { requireSession } from "@/lib/auth/dal";
 import { getCompanyForRecruiter } from "@/lib/auth/company";
 import { AppNav } from "@/components/nav/AppNav";
-import { GlobalBackButton } from "@/components/nav/GlobalBackButton";
 
 export default async function RecruiterLayout({ children }: { children: React.ReactNode }) {
   const session = await requireSession("recruiter");
@@ -19,7 +18,6 @@ export default async function RecruiterLayout({ children }: { children: React.Re
         photoUrl={company?.logoUrl}
       />
       {children}
-      <GlobalBackButton dashboardHref="/recruiter/dashboard" />
     </>
   );
 }
