@@ -3,13 +3,28 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { JobPostCard } from "@/components/matches/JobPostCard";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { BriefcaseIcon } from "@/components/ui/icons";
-import { Input } from "@/components/ui/Input";
-import { Select } from "@/components/ui/Select";
-import { Label } from "@/components/ui/Label";
-import { Card } from "@/components/ui/Card";
+import { BriefcaseIcon, ChevronDownIcon, PinIcon, SearchIcon } from "@/components/ui/icons";
 import { EMPLOYMENT_TYPES } from "@/lib/constants";
 import type { ApplicantMatchView } from "@/lib/matching/queries";
+
+const FIELD_CLASSES =
+  "w-full rounded-full border border-line bg-page/70 text-sm text-ink placeholder:text-muted transition-colors focus:border-brand focus:bg-surface focus:outline-none focus:ring-1 focus:ring-brand";
+
+function FilterChip({ label, onRemove }: { label: string; onRemove: () => void }) {
+  return (
+    <span className="flex items-center gap-1 rounded-full bg-brand-soft py-1 pl-3 pr-1.5 text-xs font-medium text-brand">
+      {label}
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={`Remove ${label} filter`}
+        className="flex h-4 w-4 items-center justify-center rounded-full text-brand/70 hover:bg-brand/10 hover:text-brand"
+      >
+        ×
+      </button>
+    </span>
+  );
+}
 
 export function JobSearchFilters({
   matches,
@@ -73,73 +88,110 @@ export function JobSearchFilters({
 
   return (
     <div className="flex flex-col gap-4">
-      <Card>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <div ref={searchBoxRef} className="relative sm:col-span-2 lg:col-span-1">
-            <Label>Search</Label>
-            <Input
+      <div className="rounded-2xl border border-line bg-surface p-4 shadow-sm sm:p-5">
+        <div ref={searchBoxRef} className="relative">
+          <SearchIcon className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+          <input
+            type="text"
+            aria-label="Search by job title or skill"
+            placeholder="Search by job title or skill"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setSuggestionsOpen(true);
+            }}
+            onFocus={() => setSuggestionsOpen(true)}
+            className={`${FIELD_CLASSES} py-3 pl-11 pr-4`}
+          />
+          {suggestionsOpen && suggestions.length > 0 && (
+            <div className="absolute z-20 mt-1.5 w-full rounded-xl border border-line bg-surface py-1 shadow-lg">
+              {suggestions.map((title) => (
+                <button
+                  key={title}
+                  type="button"
+                  onClick={() => {
+                    setQuery(title);
+                    setSuggestionsOpen(false);
+                  }}
+                  className="flex w-full items-center gap-2 truncate px-3.5 py-2 text-left text-sm text-ink hover:bg-page"
+                >
+                  <SearchIcon className="h-3.5 w-3.5 shrink-0 text-muted" />
+                  {title}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="mt-2.5 flex flex-wrap gap-2">
+          <div className="relative min-w-[9rem] flex-1">
+            <PinIcon className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+            <input
               type="text"
-              placeholder="Job title or skill"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setSuggestionsOpen(true);
-              }}
-              onFocus={() => setSuggestionsOpen(true)}
+              aria-label="Location"
+              placeholder="City or remote"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className={`${FIELD_CLASSES} py-2 pl-9 pr-3`}
             />
-            {suggestionsOpen && suggestions.length > 0 && (
-              <div className="absolute z-20 mt-1 w-full rounded-md border border-line bg-surface py-1 shadow-lg">
-                {suggestions.map((title) => (
-                  <button
-                    key={title}
-                    type="button"
-                    onClick={() => {
-                      setQuery(title);
-                      setSuggestionsOpen(false);
-                    }}
-                    className="block w-full truncate px-3 py-1.5 text-left text-sm text-ink hover:bg-page"
-                  >
-                    {title}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
-          <div>
-            <Label>Location</Label>
-            <Input type="text" placeholder="City or remote" value={location} onChange={(e) => setLocation(e.target.value)} />
-          </div>
-
-          <div>
-            <Label>Employment type</Label>
-            <Select value={employmentType} onChange={(e) => setEmploymentType(e.target.value)}>
-              <option value="">Any</option>
+          <div className="relative min-w-[8.5rem]">
+            <select
+              aria-label="Employment type"
+              value={employmentType}
+              onChange={(e) => setEmploymentType(e.target.value)}
+              className={`${FIELD_CLASSES} appearance-none py-2 pl-3.5 pr-9`}
+            >
+              <option value="">Any type</option>
               {EMPLOYMENT_TYPES.map((type) => (
                 <option key={type} value={type}>
                   {type}
                 </option>
               ))}
-            </Select>
+            </select>
+            <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <Label>Min salary</Label>
-              <Input type="number" placeholder="0" value={salaryMin} onChange={(e) => setSalaryMin(e.target.value)} />
-            </div>
-            <div>
-              <Label>Max salary</Label>
-              <Input type="number" placeholder="Any" value={salaryMax} onChange={(e) => setSalaryMax(e.target.value)} />
-            </div>
+          <div className="flex items-center gap-1.5 rounded-full border border-line bg-page/70 py-2 pl-3.5 pr-3 focus-within:border-brand focus-within:bg-surface focus-within:ring-1 focus-within:ring-brand">
+            <span className="text-sm text-muted">$</span>
+            <input
+              type="number"
+              aria-label="Minimum salary"
+              placeholder="Min"
+              value={salaryMin}
+              onChange={(e) => setSalaryMin(e.target.value)}
+              className="w-16 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
+            />
+            <span className="text-muted">–</span>
+            <input
+              type="number"
+              aria-label="Maximum salary"
+              placeholder="Max"
+              value={salaryMax}
+              onChange={(e) => setSalaryMax(e.target.value)}
+              className="w-16 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
+            />
           </div>
         </div>
 
         {hasActiveFilters && (
-          <div className="mt-3 flex items-center justify-between border-t border-line pt-3 text-xs text-muted">
-            <span>
+          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-line pt-3">
+            <span className="text-xs text-muted">
               {filtered.length} of {matches.length} matched jobs
             </span>
+            {query && <FilterChip label={`"${query}"`} onRemove={() => setQuery("")} />}
+            {location && <FilterChip label={location} onRemove={() => setLocation("")} />}
+            {employmentType && <FilterChip label={employmentType} onRemove={() => setEmploymentType("")} />}
+            {(salaryMin || salaryMax) && (
+              <FilterChip
+                label={`$${salaryMin || "0"} – ${salaryMax || "any"}`}
+                onRemove={() => {
+                  setSalaryMin("");
+                  setSalaryMax("");
+                }}
+              />
+            )}
             <button
               type="button"
               onClick={() => {
@@ -149,13 +201,13 @@ export function JobSearchFilters({
                 setSalaryMin("");
                 setSalaryMax("");
               }}
-              className="font-medium text-brand hover:underline"
+              className="ml-auto text-xs font-medium text-brand hover:underline"
             >
-              Clear filters
+              Clear all
             </button>
           </div>
         )}
-      </Card>
+      </div>
 
       {filtered.length === 0 ? (
         <EmptyState
