@@ -12,7 +12,13 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { SidebarCard } from "@/components/nav/SidebarCard";
 
-export function ProfileEditForm({ initialData }: { initialData: ProfileEditInput }) {
+export function ProfileEditForm({
+  initialData,
+  resumeHref,
+}: {
+  initialData: ProfileEditInput;
+  resumeHref: string | null;
+}) {
   const [data, setData] = useState<ProfileEditInput>(initialData);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,8 +53,16 @@ export function ProfileEditForm({ initialData }: { initialData: ProfileEditInput
               { label: "Skills listed", value: String(data.skills.length) },
               { label: "Experience entries", value: String(data.experience.length) },
             ]}
-            links={[{ href: "/applicant/dashboard", label: "Back to dashboard" }]}
+            links={[
+              ...(resumeHref ? [{ href: resumeHref, label: "Preview resume", external: true }] : []),
+              { href: "/applicant/dashboard", label: "Back to dashboard" },
+            ]}
           />
+          {!resumeHref && (
+            <p className="mt-2 px-1 text-xs text-muted">
+              Your resume will appear here once it&apos;s generated — save the form once to trigger it.
+            </p>
+          )}
         </div>
       </aside>
 

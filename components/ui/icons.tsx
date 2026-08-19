@@ -159,3 +159,21 @@ export function CompassIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function UserPlaceholderIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="24" cy="17" r="8" />
+      <path d="M8 42v-2a16 16 0 0 1 32 0v2" />
+    </svg>
+  );
+}
+
+export function CameraIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M6 16a3 3 0 0 1 3-3h4l3-4h16l3 4h4a3 3 0 0 1 3 3v20a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3Z" />
+      <circle cx="24" cy="26" r="7" />
+    </svg>
+  );
+}

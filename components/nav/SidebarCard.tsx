@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { VerifiedBadgeIcon } from "@/components/ui/icons";
 
-export type SidebarLink = { href: string; label: string };
+export type SidebarLink = { href: string; label: string; external?: boolean };
 
 const EXPERIENCE_DISPLAY_LIMIT = 3;
 
@@ -83,15 +83,27 @@ export function SidebarCard({
 
       {links.length > 0 && (
         <div className="border-t border-line">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="block px-4 py-2.5 text-sm font-medium text-ink hover:bg-page"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {links.map((link) =>
+            link.external ? (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block px-4 py-2.5 text-sm font-medium text-ink hover:bg-page"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="block px-4 py-2.5 text-sm font-medium text-ink hover:bg-page"
+              >
+                {link.label}
+              </Link>
+            ),
+          )}
         </div>
       )}
     </Card>
