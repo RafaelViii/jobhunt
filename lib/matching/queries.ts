@@ -100,8 +100,3 @@ export async function getJobsForCompany(companyId: string): Promise<(JobDoc & { 
     .map((doc) => ({ id: doc.id, ...(doc.data() as JobDoc) }))
     .sort((a, b) => b.postedAt - a.postedAt);
 }
-
-export async function getCandidateCountForJob(jobId: string): Promise<number> {
-  const snap = await adminDb().collection("matches").where("jobId", "==", jobId).count().get();
-  return snap.data().count;
-}

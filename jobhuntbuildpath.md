@@ -87,11 +87,13 @@ A granular checklist version of the phases in `CLAUDE.md`. The phases tell your 
 - [x] **3.2 Job detail page.**
   > "Build /applicant/jobs/[jobId] showing the full job posting and this applicant's match breakdown. No apply button yet — that's Phase 4."
 
-- [x] **3.3 Recruiter dashboard.** *("Candidate count" = matched candidates (matches for that job), not applications — applications don't exist until Phase 4.*
+- [x] **3.3 Recruiter dashboard.** *("Candidate count" originally = matched candidates (matches for that job), not applications, since applications didn't exist until Phase 4. Reversed 2026-08-19 (explicit user request, see 3.4 below) — now counts real applicants via `getApplicationCountForJob`.*
   > "Build /recruiter/dashboard: list this recruiter's posted jobs with applicant/candidate counts."
 
 - [x] **3.4 Recruiter candidate list.** *(Also needs the matches(jobId, score desc) composite index — same Phase 5.3 caveat as 3.1. Resume preview uses a short-lived signed URL from the private Supabase `resumes` bucket, generated server-side — matches the §8 relationship rule since reaching this page already proves the recruiter owns the job.)*
   > "Build /recruiter/jobs/[jobId]/candidates: query matches where jobId == this job, order by score desc, show each candidate's match % breakdown and a resume preview link."
+
+  *(Deviation, 2026-08-19: the page originally listed every algorithmic match for the job — the score/breakdown were useful, but most listed people had never applied, which the user found confusing ("i must only see the person who applied not all the available person"). The list is now filtered to matches that have a corresponding `applications` doc; the empty state reads "No one has applied yet" instead of "No matching candidates yet." `getCandidateCountForJob` (matches count) was removed as dead code and replaced everywhere by `getApplicationCountForJob` (lib/applications/queries.ts), including the recruiter dashboard's per-job and total counts, so the numbers stay consistent between the dashboard and the detail page.)*
 
 ---
 

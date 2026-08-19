@@ -46,6 +46,13 @@ export default async function JobCandidatesPage({ params }: { params: Promise<{ 
     })),
   );
 
+  // A match just means the algorithm thinks they're a fit — the recruiter
+  // only wants people who actually applied, per explicit request.
+  const applicants = candidatesWithExtras.filter(
+    (candidate): candidate is typeof candidate & { application: NonNullable<typeof candidate.application> } =>
+      candidate.application !== null,
+  );
+
   return (
     <div className="mx-auto flex max-w-5xl gap-6 px-4 py-8">
       <aside className="hidden w-64 shrink-0 lg:block">
@@ -59,7 +66,7 @@ export default async function JobCandidatesPage({ params }: { params: Promise<{ 
               { label: "Location", value: job.location },
               { label: "Type", value: job.employmentType },
               { label: "Seniority", value: job.seniority },
-              { label: "Candidates", value: String(candidates.length) },
+              { label: "Applicants", value: String(applicants.length) },
             ]}
             links={[{ href: `/recruiter/jobs/${jobId}/edit`, label: "Edit job" }]}
           />
@@ -69,15 +76,19 @@ export default async function JobCandidatesPage({ params }: { params: Promise<{ 
       <main className="flex min-w-0 flex-1 flex-col gap-6">
         <div>
           <h1 className="text-2xl font-bold text-ink">{job.title}</h1>
-          <p className="mt-1 text-sm text-muted">{candidates.length} matched candidates</p>
+          <p className="mt-1 text-sm text-muted">{applicants.length} applicant{applicants.length === 1 ? "" : "s"}</p>
         </div>
 
-        {candidatesWithExtras.length === 0 && (
-          <EmptyState icon={<PeopleIcon className="h-12 w-12" />} title="No matching candidates yet" />
+        {applicants.length === 0 && (
+          <EmptyState
+            icon={<PeopleIcon className="h-12 w-12" />}
+            title="No one has applied yet"
+            description="Once someone applies to this job, they'll show up here."
+          />
         )}
 
         <div className="flex flex-col gap-3">
-          {candidatesWithExtras.map((candidate) => (
+          {applicants.map((candidate) => (
             <Card key={candidate.matchId}>
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
@@ -102,17 +113,13 @@ export default async function JobCandidatesPage({ params }: { params: Promise<{ 
                   View resume
                 </a>
               )}
-              {candidate.application ? (
-                <div className="mt-3">
-                  <p className="mb-1 text-xs text-muted">Application status</p>
-                  <StatusControls
-                    applicationId={candidate.application.id}
-                    currentStatus={candidate.application.status}
-                  />
-                </div>
-              ) : (
-                <p className="mt-3 text-xs text-muted">Not applied yet</p>
-              )}
+              <div className="mt-3">
+                <p className="mb-1 text-xs text-muted">Application status</p>
+                <StatusControls
+                  applicationId={candidate.application.id}
+                  currentStatus={candidate.application.status}
+                />
+              </div>
             </Card>
           ))}
         </div>

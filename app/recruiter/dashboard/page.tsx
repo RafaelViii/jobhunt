@@ -2,7 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireSession } from "@/lib/auth/dal";
 import { getCompanyForRecruiter } from "@/lib/auth/company";
-import { getCandidateCountForJob, getJobsForCompany } from "@/lib/matching/queries";
+import { getJobsForCompany } from "@/lib/matching/queries";
+import { getApplicationCountForJob } from "@/lib/applications/queries";
 import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -19,10 +20,10 @@ export default async function RecruiterDashboardPage() {
 
   const jobs = await getJobsForCompany(company.id);
   const jobsWithCounts = await Promise.all(
-    jobs.map(async (job) => ({ job, candidateCount: await getCandidateCountForJob(job.id) })),
+    jobs.map(async (job) => ({ job, applicantCount: await getApplicationCountForJob(job.id) })),
   );
   const openJobs = jobsWithCounts.filter(({ job }) => job.status === "open").length;
-  const totalCandidates = jobsWithCounts.reduce((sum, { candidateCount }) => sum + candidateCount, 0);
+  const totalApplicants = jobsWithCounts.reduce((sum, { applicantCount }) => sum + applicantCount, 0);
 
   return (
     <div className="mx-auto flex max-w-5xl gap-6 px-4 py-8">
@@ -35,7 +36,7 @@ export default async function RecruiterDashboardPage() {
             meta={[
               { label: "Size", value: company.size || "—" },
               { label: "Open jobs", value: String(openJobs) },
-              { label: "Total candidates", value: String(totalCandidates) },
+              { label: "Total applicants", value: String(totalApplicants) },
             ]}
           />
         </div>
@@ -56,12 +57,12 @@ export default async function RecruiterDashboardPage() {
           <EmptyState
             icon={<BriefcaseIcon className="h-12 w-12" />}
             title="No jobs posted yet"
-            description="Post your first job and matched candidates will start showing up."
+            description="Post your first job and applicants will start showing up."
           />
         )}
 
         <div className="flex flex-col gap-3">
-          {jobsWithCounts.map(({ job, candidateCount }) => (
+          {jobsWithCounts.map(({ job, applicantCount }) => (
             <Card key={job.id}>
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -72,12 +73,12 @@ export default async function RecruiterDashboardPage() {
                   </p>
                 </div>
                 <Chip tone="brand" className="shrink-0">
-                  {candidateCount} {candidateCount === 1 ? "candidate" : "candidates"}
+                  {applicantCount} {applicantCount === 1 ? "applicant" : "applicants"}
                 </Chip>
               </div>
               <div className="mt-3 flex gap-4 text-sm font-medium">
                 <Link href={`/recruiter/jobs/${job.id}/candidates`} className="text-brand hover:underline">
-                  View candidates
+                  View applicants
                 </Link>
                 <Link href={`/recruiter/jobs/${job.id}/edit`} className="text-brand hover:underline">
                   Edit

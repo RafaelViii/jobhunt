@@ -62,3 +62,8 @@ export async function hasApplied(applicantUid: string, jobId: string): Promise<b
   const snap = await adminDb().collection("applications").doc(`${applicantUid}_${jobId}`).get();
   return snap.exists;
 }
+
+export async function getApplicationCountForJob(jobId: string): Promise<number> {
+  const snap = await adminDb().collection("applications").where("jobId", "==", jobId).count().get();
+  return snap.data().count;
+}
