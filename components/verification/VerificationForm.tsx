@@ -88,6 +88,16 @@ export function VerificationForm() {
             </div>
             <p className="font-semibold text-ink">Verified</p>
             <p className="text-sm text-muted">Redirecting you to post your job…</p>
+
+            <div className="mt-4 w-full rounded-md border border-line bg-page px-3 py-2.5 text-left">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">Demo mode</p>
+              <p className="mt-1 text-xs text-muted">
+                This check is simulated for demonstration purposes. A production deployment would connect this step
+                to a live government verification gateway — for example the DTI Business Name Registration System
+                for business permits, or the PhilSys National ID Verification Service for government IDs — to
+                confirm document authenticity before approval instead of auto-approving.
+              </p>
+            </div>
           </div>
         ) : isRunning ? (
           <div className="flex flex-col items-center gap-3 py-6 text-center">
@@ -138,9 +148,9 @@ export function VerificationForm() {
             <Button type="submit">Submit for verification</Button>
 
             <p className="text-xs text-muted">
-              This is a thesis demo — no document is reviewed by a human or a real verification API. Submitting shows
-              the process a production version would enforce before a real business-permit/ID check, and this document
-              is stored privately, never public.
+              Demo mode: no document is reviewed by a human or a real verification API here — this shows the process
+              a production deployment would enforce, ready to connect to a real government verification gateway
+              (e.g. DTI or PhilSys). Your document is still stored privately, never public.
             </p>
           </form>
         )}
