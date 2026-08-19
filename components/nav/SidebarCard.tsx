@@ -6,6 +6,8 @@ import { VerifiedBadgeIcon } from "@/components/ui/icons";
 
 export type SidebarLink = { href: string; label: string };
 
+const EXPERIENCE_DISPLAY_LIMIT = 3;
+
 export function SidebarCard({
   name,
   subtitle,
@@ -20,7 +22,7 @@ export function SidebarCard({
   photoUrl?: string | null;
   verified?: boolean;
   meta?: { label: string; value: string }[];
-  experience?: { title: string; company: string; period?: string; current?: boolean } | null;
+  experience?: { title: string; company: string; period?: string; current?: boolean }[];
   links?: SidebarLink[];
 }) {
   return (
@@ -52,22 +54,29 @@ export function SidebarCard({
         </div>
       )}
 
-      {experience && (
+      {experience && experience.length > 0 && (
         <div className="border-t border-line px-4 py-3">
           <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted">Experience</p>
-          <div className="rounded-md border border-line p-2.5">
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-sm font-semibold text-ink">{experience.title}</p>
-              {experience.current && (
-                <Chip tone="brand" className="shrink-0">
-                  Current
-                </Chip>
-              )}
-            </div>
-            <p className="mt-0.5 text-xs text-muted">
-              {experience.company}
-              {experience.period ? ` · ${experience.period}` : ""}
-            </p>
+          <div className="flex flex-col gap-2">
+            {experience.slice(0, EXPERIENCE_DISPLAY_LIMIT).map((entry, index) => (
+              <div key={`${entry.title}-${index}`} className="rounded-md border border-line p-2.5">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-sm font-semibold text-ink">{entry.title}</p>
+                  {entry.current && (
+                    <Chip tone="brand" className="shrink-0">
+                      Current
+                    </Chip>
+                  )}
+                </div>
+                <p className="mt-0.5 text-xs text-muted">
+                  {entry.company}
+                  {entry.period ? ` · ${entry.period}` : ""}
+                </p>
+              </div>
+            ))}
+            {experience.length > EXPERIENCE_DISPLAY_LIMIT && (
+              <p className="text-xs text-muted">+{experience.length - EXPERIENCE_DISPLAY_LIMIT} more in profile</p>
+            )}
           </div>
         </div>
       )}

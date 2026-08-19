@@ -1,11 +1,10 @@
 import type { ExperienceEntry } from "@/lib/types";
 
-export function mostRecentExperience(experience: ExperienceEntry[]): ExperienceEntry | null {
-  if (experience.length === 0) return null;
+export function sortExperienceByRecency(experience: ExperienceEntry[]): ExperienceEntry[] {
   return [...experience].sort((a, b) => {
     if (a.current !== b.current) return a.current ? -1 : 1;
     return b.startDate.localeCompare(a.startDate);
-  })[0];
+  });
 }
 
 function formatMonthYear(value: string): string {

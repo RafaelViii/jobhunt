@@ -7,7 +7,7 @@ import { JobSearchFilters } from "@/components/matches/JobSearchFilters";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { BriefcaseIcon } from "@/components/ui/icons";
 import { SidebarCard } from "@/components/nav/SidebarCard";
-import { mostRecentExperience, formatExperiencePeriod } from "@/lib/utils/experience";
+import { sortExperienceByRecency, formatExperiencePeriod } from "@/lib/utils/experience";
 import type { ApplicantProfileDoc } from "@/lib/types";
 
 export default async function ApplicantDashboardPage() {
@@ -23,7 +23,7 @@ export default async function ApplicantDashboardPage() {
     getApplicationsForApplicant(session.uid),
   ]);
   const appliedJobIds = new Set(applications.map((application) => application.jobId));
-  const recentExperience = mostRecentExperience(profile.experience);
+  const experienceEntries = sortExperienceByRecency(profile.experience);
 
   return (
     <div className="mx-auto flex max-w-5xl gap-6 px-4 py-8">
@@ -39,16 +39,12 @@ export default async function ApplicantDashboardPage() {
               { label: "Matches", value: String(matches.length) },
               { label: "Applications", value: String(applications.length) },
             ]}
-            experience={
-              recentExperience
-                ? {
-                    title: recentExperience.title,
-                    company: recentExperience.company,
-                    period: formatExperiencePeriod(recentExperience),
-                    current: recentExperience.current,
-                  }
-                : null
-            }
+            experience={experienceEntries.map((entry) => ({
+              title: entry.title,
+              company: entry.company,
+              period: formatExperiencePeriod(entry),
+              current: entry.current,
+            }))}
             links={[{ href: "/applicant/profile", label: "Edit profile" }]}
           />
         </div>

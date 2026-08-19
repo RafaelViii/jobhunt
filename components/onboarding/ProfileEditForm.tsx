@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { unstable_rethrow } from "next/navigation";
 import { BasicInfoStep } from "@/components/onboarding/steps/BasicInfoStep";
 import { ExperienceStep } from "@/components/onboarding/steps/ExperienceStep";
 import { EducationStep } from "@/components/onboarding/steps/EducationStep";
@@ -23,8 +24,10 @@ export function ProfileEditForm({ initialData }: { initialData: ProfileEditInput
     try {
       await updateApplicantProfile(data);
     } catch (err) {
-      // redirect() inside the action throws internally on success — only a
-      // real failure reaches here.
+      // redirect() inside the action throws a special error on success —
+      // rethrow it so Next completes the navigation instead of us treating
+      // it as a real failure. unstable_rethrow no-ops for genuine errors.
+      unstable_rethrow(err);
       setError(err instanceof Error ? err.message : "Failed to save profile");
       setSubmitting(false);
     }

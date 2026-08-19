@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { unstable_rethrow } from "next/navigation";
 import { applyToJob } from "@/app/applicant/jobs/[jobId]/actions";
 import { Button } from "@/components/ui/Button";
 
@@ -14,8 +15,10 @@ export function ApplyButton({ jobId, className = "" }: { jobId: string; classNam
     try {
       await applyToJob(jobId);
     } catch (err) {
-      // redirect() inside the action throws internally on success — only a
-      // real failure reaches here.
+      // redirect() inside the action throws a special error on success —
+      // rethrow it so Next completes the navigation instead of us treating
+      // it as a real failure. unstable_rethrow no-ops for genuine errors.
+      unstable_rethrow(err);
       setError(err instanceof Error ? err.message : "Failed to apply");
       setPending(false);
     }
