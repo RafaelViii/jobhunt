@@ -29,6 +29,22 @@ export function adminAuth(): Auth {
   return getAuth(getAdminApp());
 }
 
+let firestoreConfigured = false;
+
+// ignoreUndefinedProperties: fields added to a type after documents already
+// existed in production (e.g. jobs.bannerUrl, applicantProfiles.basicInfo.
+// address/about — see CLAUDE.md §4) read back as `undefined`, not `null`,
+// on old docs. Writing that doc straight back via spread-and-.set() (the
+// pattern every edit action here uses) previously threw
+// "Cannot use 'undefined' as a Firestore value" and broke editing any
+// pre-existing record with a field the current schema added later — this
+// makes that entire bug class impossible instead of chasing it field by
+// field. Must be set before the first Firestore call on this instance.
 export function adminDb(): Firestore {
-  return getFirestore(getAdminApp());
+  const db = getFirestore(getAdminApp());
+  if (!firestoreConfigured) {
+    db.settings({ ignoreUndefinedProperties: true });
+    firestoreConfigured = true;
+  }
+  return db;
 }
