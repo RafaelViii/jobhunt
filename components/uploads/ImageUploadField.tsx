@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Label } from "@/components/ui/Label";
 
 export function ImageUploadField({
   label,
@@ -38,16 +39,21 @@ export function ImageUploadField({
 
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium">{label}</label>
-      <input type="file" accept="image/png,image/jpeg,image/webp" onChange={handleFileChange} />
-      {uploading && <p className="mt-1 text-xs text-zinc-500">Uploading…</p>}
-      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+      <Label>{label}</Label>
+      <input
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        onChange={handleFileChange}
+        className="block text-sm text-ink file:mr-3 file:rounded-md file:border-0 file:bg-brand-soft file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand hover:file:bg-brand/20"
+      />
+      {uploading && <p className="mt-1 text-xs text-muted">Uploading…</p>}
+      {error && <p className="mt-1 text-xs text-danger">{error}</p>}
       {value && !uploading && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={value}
           alt=""
-          className={`mt-2 h-16 w-16 object-cover ${previewShape === "circle" ? "rounded-full" : "rounded"}`}
+          className={`mt-2 h-16 w-16 border border-line object-cover ${previewShape === "circle" ? "rounded-full" : "rounded-md"}`}
         />
       )}
     </div>

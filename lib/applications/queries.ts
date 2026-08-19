@@ -10,6 +10,7 @@ export type ApplicantApplicationView = {
   appliedAt: number;
   job: JobDoc;
   companyName: string;
+  companyLogoUrl: string | null;
 };
 
 // No orderBy in the query — sorted in JS instead, avoiding a dependency on a
@@ -36,6 +37,7 @@ export async function getApplicationsForApplicant(applicantUid: string): Promise
         appliedAt: application.appliedAt,
         job,
         companyName: company?.name ?? "Unknown company",
+        companyLogoUrl: company?.logoUrl ?? null,
       };
     }),
   );

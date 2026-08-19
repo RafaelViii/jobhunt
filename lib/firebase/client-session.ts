@@ -22,6 +22,28 @@ export async function establishSession(user: User): Promise<Role | null> {
   return role === "applicant" || role === "recruiter" ? role : null;
 }
 
+// Shared by both signup forms and the login page's post-Google role choice.
+// Returns true if this call actually created the account, false if the user
+// was already registered (a no-op — e.g. clicking Google on a signup page
+// with an account that already exists).
+export async function registerAccount(user: User, role: Role): Promise<boolean> {
+  const idToken = await user.getIdToken();
+  const res = await fetch("/api/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ idToken, role, displayName: user.displayName ?? user.email ?? "New user" }),
+  });
+
+  if (res.ok) {
+    // Force-refresh: the ID token used above predates the role claim this
+    // call just set server-side.
+    await user.getIdToken(true);
+    return true;
+  }
+  if (res.status === 409) return false;
+  throw new Error("Failed to create account");
+}
+
 export async function clearSession(): Promise<void> {
   await fetch("/api/auth/session", { method: "DELETE" });
   await signOut(getFirebaseAuth());

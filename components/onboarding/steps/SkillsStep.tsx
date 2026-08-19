@@ -11,7 +11,7 @@ export function SkillsStep({
 }) {
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-lg font-medium">Skills</h2>
+      <h2 className="text-lg font-semibold text-ink">Skills</h2>
       <TagInput
         label="Skills"
         values={value}

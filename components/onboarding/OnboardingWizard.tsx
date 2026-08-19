@@ -7,6 +7,8 @@ import { EducationStep } from "@/components/onboarding/steps/EducationStep";
 import { SkillsStep } from "@/components/onboarding/steps/SkillsStep";
 import { PreferencesStep } from "@/components/onboarding/steps/PreferencesStep";
 import { saveApplicantProfile, type OnboardingInput } from "@/app/applicant/onboarding/actions";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 
 const STEP_LABELS = ["Basic info", "Experience", "Education", "Skills", "Preferences"];
 
@@ -48,66 +50,50 @@ export function OnboardingWizard() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col gap-6 p-8">
+    <main className="mx-auto flex max-w-lg flex-col gap-6 px-4 py-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Build your profile</h1>
-        <p className="mt-1 text-sm text-zinc-500">
+        <h1 className="text-2xl font-bold text-ink">Build your profile</h1>
+        <p className="mt-1 text-sm text-muted">
           Step {step + 1} of {STEP_LABELS.length}: {STEP_LABELS[step]}
         </p>
         <div className="mt-3 flex gap-1">
           {STEP_LABELS.map((label, i) => (
-            <div
-              key={label}
-              className={`h-1 flex-1 rounded ${i <= step ? "bg-zinc-900 dark:bg-zinc-100" : "bg-zinc-200 dark:bg-zinc-800"}`}
-            />
+            <div key={label} className={`h-1 flex-1 rounded ${i <= step ? "bg-brand" : "bg-line"}`} />
           ))}
         </div>
       </div>
 
-      {step === 0 && (
-        <BasicInfoStep value={data.basicInfo} onChange={(basicInfo) => setData({ ...data, basicInfo })} />
-      )}
-      {step === 1 && (
-        <ExperienceStep value={data.experience} onChange={(experience) => setData({ ...data, experience })} />
-      )}
-      {step === 2 && (
-        <EducationStep value={data.education} onChange={(education) => setData({ ...data, education })} />
-      )}
-      {step === 3 && <SkillsStep value={data.skills} onChange={(skills) => setData({ ...data, skills })} />}
-      {step === 4 && (
-        <PreferencesStep value={data.preferences} onChange={(preferences) => setData({ ...data, preferences })} />
-      )}
+      <Card className="p-6">
+        {step === 0 && (
+          <BasicInfoStep value={data.basicInfo} onChange={(basicInfo) => setData({ ...data, basicInfo })} />
+        )}
+        {step === 1 && (
+          <ExperienceStep value={data.experience} onChange={(experience) => setData({ ...data, experience })} />
+        )}
+        {step === 2 && (
+          <EducationStep value={data.education} onChange={(education) => setData({ ...data, education })} />
+        )}
+        {step === 3 && <SkillsStep value={data.skills} onChange={(skills) => setData({ ...data, skills })} />}
+        {step === 4 && (
+          <PreferencesStep value={data.preferences} onChange={(preferences) => setData({ ...data, preferences })} />
+        )}
+      </Card>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-danger">{error}</p>}
 
       <div className="flex justify-between">
-        <button
-          type="button"
-          disabled={step === 0 || submitting}
-          onClick={() => setStep((s) => s - 1)}
-          className="rounded border border-zinc-300 px-4 py-2 text-sm disabled:opacity-40 dark:border-zinc-700"
-        >
+        <Button type="button" variant="secondary" disabled={step === 0 || submitting} onClick={() => setStep((s) => s - 1)}>
           Back
-        </button>
+        </Button>
 
         {isLastStep ? (
-          <button
-            type="button"
-            disabled={submitting}
-            onClick={handleFinish}
-            className="rounded bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
-          >
+          <Button type="button" disabled={submitting} onClick={handleFinish}>
             {submitting ? "Saving…" : "Finish"}
-          </button>
+          </Button>
         ) : (
-          <button
-            type="button"
-            disabled={!canGoNext}
-            onClick={() => setStep((s) => s + 1)}
-            className="rounded bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-40 dark:bg-zinc-100 dark:text-zinc-900"
-          >
+          <Button type="button" disabled={!canGoNext} onClick={() => setStep((s) => s + 1)}>
             Next
-          </button>
+          </Button>
         )}
       </div>
     </main>

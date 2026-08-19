@@ -23,6 +23,14 @@ export async function POST(request: Request) {
     const decoded = await adminAuth().verifyIdToken(idToken);
     uid = decoded.uid;
     email = decoded.email ?? null;
+
+    // Server-side enforcement, not just a UI gate — email/password accounts
+    // must verify before an account is actually created. Google/federated
+    // sign-in is exempt: Firebase marks those emails verified automatically
+    // since the provider already confirmed ownership.
+    if (!decoded.email_verified) {
+      return NextResponse.json({ error: "Email not verified yet" }, { status: 403 });
+    }
   } catch {
     return NextResponse.json({ error: "Invalid idToken" }, { status: 401 });
   }

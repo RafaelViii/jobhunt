@@ -13,6 +13,7 @@ export type ApplicantMatchView = {
   breakdown: MatchBreakdown;
   job: JobDoc;
   companyName: string;
+  companyLogoUrl: string | null;
 };
 
 export async function getMatchesForApplicant(applicantUid: string): Promise<ApplicantMatchView[]> {
@@ -40,6 +41,7 @@ export async function getMatchesForApplicant(applicantUid: string): Promise<Appl
         breakdown: match.breakdown,
         job,
         companyName: company?.name ?? "Unknown company",
+        companyLogoUrl: company?.logoUrl ?? null,
       };
     }),
   );

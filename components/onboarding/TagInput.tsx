@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Label } from "@/components/ui/Label";
 
 export function TagInput({
   label,
@@ -34,18 +35,18 @@ export function TagInput({
 
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium">{label}</label>
-      <div className="flex flex-wrap gap-2 rounded border border-zinc-300 p-2 dark:border-zinc-700">
+      <Label>{label}</Label>
+      <div className="flex flex-wrap gap-2 rounded-md border border-line bg-surface p-2 focus-within:border-brand focus-within:ring-1 focus-within:ring-brand">
         {values.map((value) => (
           <span
             key={value}
-            className="flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-1 text-xs dark:bg-zinc-800"
+            className="flex items-center gap-1 rounded-full bg-brand-soft px-2 py-1 text-xs font-medium text-brand"
           >
             {value}
             <button
               type="button"
               onClick={() => onChange(values.filter((v) => v !== value))}
-              className="text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
+              className="text-brand/70 hover:text-brand"
               aria-label={`Remove ${value}`}
             >
               ×
@@ -59,7 +60,7 @@ export function TagInput({
           onKeyDown={handleKeyDown}
           onBlur={commitDraft}
           placeholder={placeholder}
-          className="min-w-[8rem] flex-1 bg-transparent text-sm outline-none"
+          className="min-w-[8rem] flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
         />
       </div>
     </div>

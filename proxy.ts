@@ -43,6 +43,17 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(destination, request.url));
   }
 
+  // Root always redirects — signed in goes to the role dashboard, signed out
+  // goes straight to login. There's no standalone landing page in this app.
+  if (pathname === "/") {
+    const destination = session?.role
+      ? session.role === "recruiter"
+        ? "/recruiter/dashboard"
+        : "/applicant/dashboard"
+      : "/login";
+    return NextResponse.redirect(new URL(destination, request.url));
+  }
+
   return NextResponse.next();
 }
 

@@ -1,5 +1,7 @@
 "use client";
 
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
 import type { ExperienceEntry } from "@/lib/types";
 
 const EMPTY_ENTRY: ExperienceEntry = {
@@ -28,42 +30,38 @@ export function ExperienceStep({
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-lg font-medium">Work experience</h2>
+      <h2 className="text-lg font-semibold text-ink">Work experience</h2>
 
       {value.map((entry, index) => (
-        <div key={index} className="flex flex-col gap-2 rounded border border-zinc-300 p-3 dark:border-zinc-700">
-          <div className="grid grid-cols-2 gap-2">
-            <input
+        <div key={index} className="flex flex-col gap-2 rounded-md border border-line bg-page p-3">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <Input
               type="text"
               placeholder="Job title"
               value={entry.title}
               onChange={(e) => updateEntry(index, { title: e.target.value })}
-              className="rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
             />
-            <input
+            <Input
               type="text"
               placeholder="Company"
               value={entry.company}
               onChange={(e) => updateEntry(index, { company: e.target.value })}
-              className="rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
             />
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <input
+            <Input
               type="month"
               value={entry.startDate}
               onChange={(e) => updateEntry(index, { startDate: e.target.value })}
-              className="rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
             />
-            <input
+            <Input
               type="month"
               disabled={entry.current}
               value={entry.endDate ?? ""}
               onChange={(e) => updateEntry(index, { endDate: e.target.value || null })}
-              className="rounded border border-zinc-300 px-3 py-2 text-sm disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900"
             />
           </div>
-          <label className="flex items-center gap-2 text-sm">
+          <label className="flex items-center gap-2 text-sm text-ink">
             <input
               type="checkbox"
               checked={entry.current}
@@ -71,17 +69,16 @@ export function ExperienceStep({
             />
             I currently work here
           </label>
-          <textarea
+          <Textarea
             placeholder="Description"
             value={entry.description}
             onChange={(e) => updateEntry(index, { description: e.target.value })}
             rows={2}
-            className="rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
           />
           <button
             type="button"
             onClick={() => removeEntry(index)}
-            className="self-start text-xs text-red-600 hover:underline"
+            className="self-start text-xs font-medium text-danger hover:underline"
           >
             Remove
           </button>
@@ -91,7 +88,7 @@ export function ExperienceStep({
       <button
         type="button"
         onClick={() => onChange([...value, { ...EMPTY_ENTRY }])}
-        className="self-start rounded border border-zinc-300 px-3 py-1.5 text-sm dark:border-zinc-700"
+        className="self-start rounded-md border border-line px-3 py-1.5 text-sm font-medium text-ink hover:bg-page"
       >
         + Add experience
       </button>

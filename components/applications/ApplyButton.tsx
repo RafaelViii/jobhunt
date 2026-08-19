@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { applyToJob } from "@/app/applicant/jobs/[jobId]/actions";
+import { Button } from "@/components/ui/Button";
 
-export function ApplyButton({ jobId }: { jobId: string }) {
+export function ApplyButton({ jobId, className = "" }: { jobId: string; className?: string }) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,15 +23,10 @@ export function ApplyButton({ jobId }: { jobId: string }) {
 
   return (
     <div>
-      <button
-        type="button"
-        onClick={handleApply}
-        disabled={pending}
-        className="rounded bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
-      >
+      <Button type="button" onClick={handleApply} disabled={pending} className={className}>
         {pending ? "Applying…" : "Apply"}
-      </button>
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      </Button>
+      {error && <p className="mt-2 text-sm text-danger">{error}</p>}
     </div>
   );
 }

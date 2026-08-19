@@ -2,6 +2,9 @@
 
 import { TagInput } from "@/components/onboarding/TagInput";
 import { EMPLOYMENT_TYPES, SENIORITIES } from "@/lib/constants";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
+import { Select } from "@/components/ui/Select";
 import type { ApplicantPreferences, EmploymentType, Seniority } from "@/lib/types";
 
 export function PreferencesStep({
@@ -23,7 +26,7 @@ export function PreferencesStep({
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-lg font-medium">Job preferences</h2>
+      <h2 className="text-lg font-semibold text-ink">Job preferences</h2>
 
       <TagInput
         label="Desired titles"
@@ -41,30 +44,28 @@ export function PreferencesStep({
 
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="mb-1 block text-sm font-medium">Min salary</label>
-          <input
+          <Label>Min salary</Label>
+          <Input
             type="number"
             value={value.salaryMin ?? ""}
             onChange={(e) => onChange({ ...value, salaryMin: e.target.value ? Number(e.target.value) : null })}
-            className="w-full rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium">Max salary</label>
-          <input
+          <Label>Max salary</Label>
+          <Input
             type="number"
             value={value.salaryMax ?? ""}
             onChange={(e) => onChange({ ...value, salaryMax: e.target.value ? Number(e.target.value) : null })}
-            className="w-full rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
           />
         </div>
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">Employment type</label>
+        <Label>Employment type</Label>
         <div className="flex flex-wrap gap-3">
           {EMPLOYMENT_TYPES.map((type) => (
-            <label key={type} className="flex items-center gap-1.5 text-sm">
+            <label key={type} className="flex items-center gap-1.5 text-sm text-ink">
               <input
                 type="checkbox"
                 checked={value.employmentTypes.includes(type)}
@@ -77,11 +78,10 @@ export function PreferencesStep({
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">Seniority</label>
-        <select
+        <Label>Seniority</Label>
+        <Select
           value={value.seniority ?? ""}
           onChange={(e) => onChange({ ...value, seniority: (e.target.value || null) as Seniority | null })}
-          className="w-full rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
         >
           <option value="">Select…</option>
           {SENIORITIES.map((s) => (
@@ -89,7 +89,7 @@ export function PreferencesStep({
               {s}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 "use client";
 
 import { ImageUploadField } from "@/components/uploads/ImageUploadField";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
 import type { ApplicantBasicInfo } from "@/lib/types";
 
 export function BasicInfoStep({
@@ -12,39 +14,27 @@ export function BasicInfoStep({
 }) {
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-lg font-medium">Basic info</h2>
+      <h2 className="text-lg font-semibold text-ink">Basic info</h2>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">Full name</label>
-        <input
-          type="text"
-          required
-          value={value.name}
-          onChange={(e) => onChange({ ...value, name: e.target.value })}
-          className="w-full rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
-        />
+        <Label>Full name</Label>
+        <Input type="text" required value={value.name} onChange={(e) => onChange({ ...value, name: e.target.value })} />
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">Location</label>
-        <input
+        <Label>Location</Label>
+        <Input
           type="text"
           required
           placeholder="City, Country"
           value={value.location}
           onChange={(e) => onChange({ ...value, location: e.target.value })}
-          className="w-full rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
         />
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">Phone</label>
-        <input
-          type="tel"
-          value={value.phone}
-          onChange={(e) => onChange({ ...value, phone: e.target.value })}
-          className="w-full rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
-        />
+        <Label>Phone</Label>
+        <Input type="tel" value={value.phone} onChange={(e) => onChange({ ...value, phone: e.target.value })} />
       </div>
 
       <ImageUploadField

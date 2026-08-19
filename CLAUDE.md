@@ -21,7 +21,7 @@ A two-sided job platform demo for a thesis — **not for commercial use**. Two a
 ## 3. Tech stack — hard constraints
 
 - **Frontend + server logic:** Next.js, App Router, deployed on **Vercel** (Hobby tier).
-- **Auth:** Firebase Authentication (email/password + Google sign-in).
+- **Auth:** Firebase Authentication (email/password + Google sign-in). Email/password signups must verify their email before `users/{uid}` and the role claim are created — enforced server-side in `/api/auth/register` via the ID token's `email_verified` claim, not just in the UI. Google sign-in is exempt (already provider-verified). Verification uses Firebase's own built-in `sendEmailVerification` link — works for *any* email address immediately, no third-party service or domain needed. (A custom 6-digit-code-by-email variant was tried and reverted 2026-08-19: Resend's free tier can only deliver to the sender's own verified email without a verified sending domain, and Firebase's Admin API refuses template-content edits — `EMAIL_TEMPLATE_UPDATE_NOT_ALLOWED` — so cosmetic branding of the verification email has to be done by hand in the Firebase console, Authentication → Templates.) `SignupForm`'s client polls for `emailVerified` every few seconds after sending the link, so the page continues on its own once clicked — no "I've verified, continue" button needed. Signup also detects and resumes a stranded unverified account left over from an abandoned prior attempt (`auth/email-already-in-use`) rather than permanently blocking that email.
 - **Database:** Firestore, **Spark (free) plan**.
 - **Storage:** **Supabase Storage** (free tier) — resume PDFs, profile photos, company logos. *(Changed from Firebase Storage on 2026-08-18: as of late 2024 Google requires the Blaze plan and a card on file to create a Firebase Storage bucket at all, even at $0 usage. The user is not willing to attach billing. Supabase Storage's free tier needs no card and is a drop-in bucket/path model, so only file storage moves off Firebase — Auth and Firestore are unaffected.)*
 - **Server-privileged writes:** Next.js Server Actions / Route Handlers using the **Firebase Admin SDK** (Firestore/Auth) and the **Supabase service-role key** (Storage).
@@ -114,7 +114,7 @@ Two buckets:
 ## 9. Route / page structure
 
 ```
-/                          landing
+/                          redirects — signed in -> role dashboard, signed out -> /login (no standalone landing page, changed 2026-08-18)
 /login
 /signup/applicant
 /signup/recruiter
@@ -126,6 +126,7 @@ Two buckets:
 /recruiter/onboarding      company profile
 /recruiter/dashboard       posted jobs + candidate previews
 /recruiter/jobs/new
+/recruiter/jobs/[jobId]/edit
 /recruiter/jobs/[jobId]/candidates   ranked applicant list
 ```
 

@@ -13,5 +13,22 @@
   ["QA Engineer", "Test Engineer", "QA Analyst", "Software Tester"],
   ["Software Engineer", "Software Developer", "Junior Developer", "Programmer"],
   ["Marketing Specialist", "Growth Marketer", "Digital Marketer"],
-  ["HR Generalist", "People Ops", "HR Coordinator"]
+  ["HR Generalist", "People Ops", "HR Coordinator"],
+  ["Virtual Assistant", "General Virtual Assistant", "Executive Virtual Assistant", "Administrative Assistant"],
+  ["Data Entry Specialist", "Data Entry Clerk", "Data Entry Assistant", "Financial Data Entry"],
+  ["Customer Service Representative", "Customer Support Representative", "Customer Support Specialist", "Client Support Representative"],
+  ["Chat Support Specialist", "Chat Support Agent", "Online Chat Support", "Email Support Specialist"],
+  ["Technical Support Specialist", "Technical Support Representative", "IT Support Specialist", "Help Desk Support"],
+  ["Graphic Designer", "Visual Designer", "Brand Designer", "Logo Designer"],
+  ["Video Editor", "Video Production Specialist", "Motion Graphics Designer"],
+  ["Social Media Content Creator", "Social Media Assistant", "Content Creator"],
+  ["Social Media Manager", "Social Media Strategist"],
+  ["SEO Specialist", "SEO Content Writer", "SEO Analyst"],
+  ["Content Writer", "Copywriter", "Blog Writer", "Product Description Writer"],
+  ["E-Commerce Virtual Assistant", "E-Commerce Assistant", "Amazon VA", "Ecommerce VA"],
+  ["Product Listing Specialist", "Product Research Specialist", "Catalog Specialist", "Amazon VA"],
+  ["Order Processing Assistant", "Order Management Assistant", "E-Commerce Manager"],
+  ["Bookkeeper", "Accounting Assistant", "Financial Data Entry Specialist", "Payroll Assistant"],
+  ["Online English Tutor", "ESL Teacher", "English Tutor"],
+  ["Online Math Tutor", "Math Tutor", "Subject Tutor"]
 ]

@@ -36,10 +36,8 @@ export function StatusControls({
           type="button"
           onClick={() => handleChange(status)}
           disabled={pending !== null}
-          className={`rounded-full px-2.5 py-1 text-xs font-medium disabled:opacity-50 ${
-            status === currentStatus
-              ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-              : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+          className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize transition-colors disabled:opacity-50 ${
+            status === currentStatus ? "bg-brand text-white" : "bg-page text-muted hover:bg-brand-soft hover:text-brand"
           }`}
         >
           {status}
