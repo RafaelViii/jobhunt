@@ -177,3 +177,11 @@ export function CameraIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function PlusIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M24 8v32M8 24h32" />
+    </svg>
+  );
+}

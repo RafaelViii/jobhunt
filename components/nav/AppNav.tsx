@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ComponentType, type SVGProps } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar } from "@/components/nav/Avatar";
 import { clearSession } from "@/lib/firebase/client-session";
 
-export type NavLink = { href: string; label: string };
+export type NavLink = { href: string; label: string; icon: ComponentType<SVGProps<SVGSVGElement>> };
 
 export function AppNav({
   homeHref,
@@ -43,24 +43,29 @@ export function AppNav({
   return (
     <header className="sticky top-0 z-10 border-b border-line bg-surface">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-        <div className="flex items-center gap-6">
-          <Link href={homeHref} className="text-lg font-bold tracking-tight text-brand">
+        <div className="flex items-center gap-3 sm:gap-6">
+          <Link href={homeHref} className="shrink-0 text-lg font-bold tracking-tight text-brand">
             JobHunt
           </Link>
-          {/* Text nav collapses into the avatar dropdown below md — "JobHunt"
-              + these labels + the avatar don't fit a phone-width header. */}
-          <nav className="hidden items-center gap-1 md:flex">
+          {/* Icon-only on mobile (fits next to the logo + avatar without a
+              dropdown detour), full label alongside on md+ — either way
+              Dashboard/Applications are always one tap away, never buried
+              behind the account menu. */}
+          <nav className="flex items-center gap-1">
             {navLinks.map((link) => {
               const active = pathname === link.href;
+              const Icon = link.icon;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
+                  aria-label={link.label}
+                  className={`flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-sm font-medium transition-colors sm:rounded-md ${
                     active ? "bg-brand-soft text-brand" : "text-muted hover:bg-page hover:text-ink"
                   }`}
                 >
-                  {link.label}
+                  <Icon className="h-5 w-5 shrink-0" />
+                  <span className="hidden sm:inline">{link.label}</span>
                 </Link>
               );
             })}
@@ -92,19 +97,6 @@ export function AppNav({
           {open && (
             <div className="absolute right-0 z-20 mt-2 w-52 rounded-lg border border-line bg-surface py-1 shadow-lg">
               <div className="truncate border-b border-line px-3 py-2 text-sm font-medium text-ink">{name}</div>
-              {/* Same links as the top nav — only reachable from here below md. */}
-              <div className="border-b border-line py-1 md:hidden">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className="block px-3 py-2 text-sm text-ink hover:bg-page"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
               {profileHref && (
                 <Link
                   href={profileHref}
