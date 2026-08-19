@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/Button";
 const STEP_LABELS = ["Basic info", "Experience", "Education", "Skills", "Preferences"];
 
 const INITIAL_STATE: OnboardingInput = {
-  basicInfo: { name: "", location: "", phone: "", photoUrl: null },
+  basicInfo: { name: "", location: "", address: "", phone: "", photoUrl: null, about: "" },
   experience: [],
   education: [],
   skills: [],

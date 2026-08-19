@@ -10,12 +10,17 @@ const MAX_SUGGESTIONS = 8;
 export function TitleCombobox({
   value,
   onChange,
+  onSelect,
   suggestions,
   placeholder,
   required,
 }: {
   value: string;
   onChange: (value: string) => void;
+  // Fires only when a suggestion is deliberately clicked, not on every
+  // keystroke — lets a caller react to "recruiter picked a predefined
+  // title" (e.g. auto-filling skills) without firing on free-text typing.
+  onSelect?: (value: string) => void;
   suggestions: string[];
   placeholder?: string;
   required?: boolean;
@@ -59,6 +64,7 @@ export function TitleCombobox({
               type="button"
               onClick={() => {
                 onChange(title);
+                onSelect?.(title);
                 setOpen(false);
               }}
               className="block w-full truncate px-3 py-1.5 text-left text-sm text-ink hover:bg-page"

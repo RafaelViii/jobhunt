@@ -13,12 +13,14 @@ export function ImageUploadField({
   label: string;
   value: string | null;
   onChange: (url: string | null) => void;
-  previewShape?: "circle" | "square";
+  previewShape?: "circle" | "square" | "banner";
 }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const PlaceholderIcon = previewShape === "circle" ? UserPlaceholderIcon : BriefcaseIcon;
+  const PlaceholderIcon =
+    previewShape === "circle" ? UserPlaceholderIcon : previewShape === "banner" ? CameraIcon : BriefcaseIcon;
+  const boxSizeClass = previewShape === "banner" ? "h-20 w-36" : "h-20 w-20";
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -44,9 +46,9 @@ export function ImageUploadField({
     <div>
       <Label>{label}</Label>
       <div className="flex items-center gap-4">
-        <div className="relative h-20 w-20 shrink-0">
+        <div className={`relative shrink-0 ${boxSizeClass}`}>
           <div
-            className={`flex h-20 w-20 items-center justify-center overflow-hidden border border-line bg-page ${
+            className={`flex items-center justify-center overflow-hidden border border-line bg-page ${boxSizeClass} ${
               previewShape === "circle" ? "rounded-full" : "rounded-md"
             }`}
           >

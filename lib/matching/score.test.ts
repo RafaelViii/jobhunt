@@ -4,7 +4,7 @@ import type { ApplicantProfileDoc, JobDoc } from "@/lib/types";
 
 function baseApplicant(overrides: Partial<ApplicantProfileDoc> = {}): ApplicantProfileDoc {
   return {
-    basicInfo: { name: "Test Applicant", location: "Manila", phone: "", photoUrl: null },
+    basicInfo: { name: "Test Applicant", location: "Manila", address: "", phone: "", photoUrl: null, about: "" },
     experience: [],
     education: [],
     skills: [],
@@ -27,6 +27,7 @@ function baseJob(overrides: Partial<JobDoc> = {}): JobDoc {
     companyId: "company-1",
     title: "Backend Engineer",
     description: "",
+    bannerUrl: null,
     skills: [],
     location: "Manila",
     remote: false,

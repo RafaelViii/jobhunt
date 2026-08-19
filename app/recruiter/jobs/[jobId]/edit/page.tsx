@@ -25,6 +25,7 @@ export default async function EditJobPage({ params }: { params: Promise<{ jobId:
       initialData={{
         title: job.title,
         description: job.description,
+        bannerUrl: job.bannerUrl,
         skills: job.skills,
         location: job.location,
         remote: job.remote,

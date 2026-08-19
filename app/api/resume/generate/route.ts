@@ -18,7 +18,7 @@ export async function POST() {
     return NextResponse.json({ error: "No profile found" }, { status: 404 });
   }
 
-  const path = await generateAndStoreResume(session.uid, profileSnap.data() as ApplicantProfileDoc);
+  const path = await generateAndStoreResume(session.uid, profileSnap.data() as ApplicantProfileDoc, session.email ?? "");
   if (!path) {
     return NextResponse.json({ error: "Resume generation failed" }, { status: 500 });
   }

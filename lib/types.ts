@@ -42,8 +42,13 @@ export type ApplicantPreferences = {
 export type ApplicantBasicInfo = {
   name: string;
   location: string;
+  // Free-text street address for resume display — distinct from `location`,
+  // which stays a plain city string driving the location match factor (§5).
+  address: string;
   phone: string;
   photoUrl: string | null;
+  // Short professional summary shown as "About me" on the generated resume.
+  about: string;
 };
 
 export type ApplicantProfileDoc = {
@@ -106,6 +111,9 @@ export type JobDoc = {
   companyId: string;
   title: string;
   description: string;
+  // Public URL (public-assets bucket) for a recruiter-uploaded banner —
+  // null falls back to the deterministic gradient+icon CategoryBanner.
+  bannerUrl: string | null;
   skills: string[];
   location: string;
   remote: boolean;

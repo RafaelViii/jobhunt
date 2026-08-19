@@ -35,7 +35,13 @@ export default async function ApplicantJobDetailPage({ params }: { params: Promi
       {/* pb-24 clears the fixed mobile apply bar so it never covers the last content */}
       <main className="flex min-w-0 max-w-2xl flex-1 flex-col gap-6 pb-24 lg:pb-0">
         <Card className="overflow-hidden p-0">
-          <CategoryBanner jobId={jobId} title={job.title} skills={job.skills} className="h-36 w-full sm:h-48" />
+          <CategoryBanner
+            jobId={jobId}
+            title={job.title}
+            skills={job.skills}
+            bannerUrl={job.bannerUrl}
+            className="h-36 w-full sm:h-48"
+          />
           <div className="flex items-center gap-3 p-4">
             <Avatar name={company?.name ?? "?"} photoUrl={company?.logoUrl} size={48} />
             <div>

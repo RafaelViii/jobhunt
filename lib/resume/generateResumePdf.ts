@@ -18,9 +18,10 @@ function resumePathFor(uid: string): string {
 export async function generateAndStoreResume(
   uid: string,
   profile: ApplicantProfileDoc,
+  email: string,
 ): Promise<string | null> {
   try {
-    const buffer = await renderToBuffer(ResumeDocument({ profile }));
+    const buffer = await renderToBuffer(ResumeDocument({ profile, email }));
     const path = resumePathFor(uid);
 
     const { error } = await supabaseAdmin()

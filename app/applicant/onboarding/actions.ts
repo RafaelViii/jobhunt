@@ -28,7 +28,7 @@ export async function saveApplicantProfile(input: OnboardingInput): Promise<void
 
   await adminDb().collection("applicantProfiles").doc(session.uid).set(profile);
   await recomputeMatchesForApplicant(session.uid);
-  await generateAndStoreResume(session.uid, profile);
+  await generateAndStoreResume(session.uid, profile, session.email ?? "");
 
   redirect("/applicant/dashboard");
 }

@@ -14,6 +14,7 @@ export function JobPostCard({
   title,
   companyName,
   companyLogoUrl,
+  bannerUrl,
   location,
   remote,
   score,
@@ -25,6 +26,7 @@ export function JobPostCard({
   title: string;
   companyName: string;
   companyLogoUrl?: string | null;
+  bannerUrl?: string | null;
   location: string;
   remote: boolean;
   score: number;
@@ -74,7 +76,7 @@ export function JobPostCard({
         )}
       </div>
 
-      <CategoryBanner jobId={jobId} title={title} skills={skills} className="h-44 w-full" />
+      <CategoryBanner jobId={jobId} title={title} skills={skills} bannerUrl={bannerUrl} className="h-44 w-full" />
 
       {skills.length > 0 && (
         <div className="flex flex-wrap gap-1.5 px-4 pt-3">

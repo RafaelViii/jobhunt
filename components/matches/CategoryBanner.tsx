@@ -36,13 +36,22 @@ export function CategoryBanner({
   jobId,
   title,
   skills,
+  bannerUrl,
   className = "",
 }: {
   jobId: string;
   title: string;
   skills?: string[];
+  // Recruiter-uploaded banner takes priority when present — the
+  // gradient+icon is only the fallback for jobs without one.
+  bannerUrl?: string | null;
   className?: string;
 }) {
+  if (bannerUrl) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={bannerUrl} alt="" className={`object-cover ${className}`} />;
+  }
+
   const category = classifyJobCategory(title, skills);
   const Icon = CATEGORY_ICON[category];
 

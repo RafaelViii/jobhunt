@@ -1168,7 +1168,7 @@ function applicant({
   company,
 }) {
   return {
-    basicInfo: { name, location, phone: "+63 900 000 0000", photoUrl: null },
+    basicInfo: { name, location, address: "", phone: "+63 900 000 0000", photoUrl: null, about: "" },
     experience: [
       {
         title: headline,
@@ -1631,6 +1631,7 @@ async function seedJobs(companyIdByKey) {
       companyId,
       title: job.title,
       description: job.description,
+      bannerUrl: null,
       skills: job.skills,
       location: job.location,
       remote: job.remote,

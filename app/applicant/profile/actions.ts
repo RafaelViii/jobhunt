@@ -32,7 +32,7 @@ export async function updateApplicantProfile(input: ProfileEditInput): Promise<v
 
   await profileRef.set(profile);
   await recomputeMatchesForApplicant(session.uid);
-  await generateAndStoreResume(session.uid, profile);
+  await generateAndStoreResume(session.uid, profile, session.email ?? "");
 
   redirect("/applicant/dashboard");
 }

@@ -22,9 +22,11 @@ async function main() {
   for (const doc of profilesSnap.docs) {
     const uid = doc.id;
     const profile = doc.data() as ApplicantProfileDoc;
+    const userDoc = await adminDb().collection("users").doc(uid).get();
+    const email = (userDoc.data()?.email as string | undefined) ?? "";
 
     await recomputeMatchesForApplicant(uid);
-    const resumePath = await generateAndStoreResume(uid, profile);
+    const resumePath = await generateAndStoreResume(uid, profile, email);
 
     console.log(`  ${profile.basicInfo.name}: matches computed, resume ${resumePath ? "generated" : "FAILED"}`);
   }

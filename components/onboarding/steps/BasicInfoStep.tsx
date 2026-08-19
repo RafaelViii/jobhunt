@@ -2,6 +2,7 @@
 
 import { ImageUploadField } from "@/components/uploads/ImageUploadField";
 import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
 import { Label } from "@/components/ui/Label";
 import type { ApplicantBasicInfo } from "@/lib/types";
 
@@ -39,8 +40,28 @@ export function BasicInfoStep({
       </div>
 
       <div>
+        <Label>Address (optional)</Label>
+        <Input
+          type="text"
+          placeholder="Street, Barangay, City"
+          value={value.address}
+          onChange={(e) => onChange({ ...value, address: e.target.value })}
+        />
+      </div>
+
+      <div>
         <Label>Phone</Label>
         <Input type="tel" value={value.phone} onChange={(e) => onChange({ ...value, phone: e.target.value })} />
+      </div>
+
+      <div>
+        <Label>About me (optional)</Label>
+        <Textarea
+          rows={4}
+          placeholder="A couple sentences about your background and what you're looking for — shown on your resume."
+          value={value.about}
+          onChange={(e) => onChange({ ...value, about: e.target.value })}
+        />
       </div>
     </div>
   );
