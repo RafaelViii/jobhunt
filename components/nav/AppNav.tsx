@@ -1,12 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState, type ComponentType, type SVGProps } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar } from "@/components/nav/Avatar";
 import { clearSession } from "@/lib/firebase/client-session";
+import { BriefcaseIcon, InboxIcon, PlusIcon } from "@/components/ui/icons";
 
-export type NavLink = { href: string; label: string; icon: ComponentType<SVGProps<SVGSVGElement>> };
+// Server Components (the layouts rendering AppNav) can't pass a component
+// reference to a Client Component — functions don't cross the RSC
+// serialization boundary. A string key does, and gets resolved to the real
+// icon component here, entirely client-side.
+const NAV_ICONS = { briefcase: BriefcaseIcon, inbox: InboxIcon, plus: PlusIcon };
+
+export type NavLink = { href: string; label: string; icon: keyof typeof NAV_ICONS };
 
 export function AppNav({
   homeHref,
@@ -54,7 +61,7 @@ export function AppNav({
           <nav className="flex items-center gap-1">
             {navLinks.map((link) => {
               const active = pathname === link.href;
-              const Icon = link.icon;
+              const Icon = NAV_ICONS[link.icon];
               return (
                 <Link
                   key={link.href}
