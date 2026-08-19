@@ -49,7 +49,7 @@ export default async function ApplicantDashboardPage() {
       </aside>
 
       <main className="flex min-w-0 flex-1 flex-col gap-6">
-        <h1 className="text-2xl font-bold text-ink">Matched jobs</h1>
+        <h1 className="text-2xl font-bold text-ink">Matched jobs updated</h1>
 
         {matches.length === 0 ? (
           <EmptyState
