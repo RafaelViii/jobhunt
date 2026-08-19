@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import type { VerificationDocumentType } from "@/lib/types";
 
 // Purely cosmetic pacing for the "processing" feel described in
-// CLAUDE.md §11a — nothing here is a real check, it always succeeds.
+// CLAUDE.md §11 — nothing here is a real check, it always succeeds.
 const STAGES = ["Processing…", "Verifying documents…", "Confirming…"];
 const STAGE_DURATION_MS = 900;
 

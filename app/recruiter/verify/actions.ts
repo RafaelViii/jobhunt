@@ -6,7 +6,7 @@ import { getCompanyForRecruiter } from "@/lib/auth/company";
 import { adminDb } from "@/lib/firebase/admin";
 import type { VerificationDocumentType } from "@/lib/types";
 
-// Not a real verification integration — see CLAUDE.md §11a. Always succeeds
+// Not a real verification integration — see CLAUDE.md §11. Always succeeds
 // once a document is uploaded; the animated "processing" sequence lives
 // client-side in VerificationForm, this just persists the outcome.
 export async function submitVerification(documentType: VerificationDocumentType, documentPath: string): Promise<void> {

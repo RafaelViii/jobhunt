@@ -63,7 +63,7 @@ export type ApplicantProfileDoc = {
 
 export type VerificationDocumentType = "business_permit" | "government_id";
 
-// Not a real verification integration — see CLAUDE.md §11a. status flips
+// Not a real verification integration — see CLAUDE.md §11. status flips
 // straight from "unverified" to "verified" once a document is submitted;
 // this models the gate a real business-permit/ID verification API would
 // enforce, without one actually being wired up.
