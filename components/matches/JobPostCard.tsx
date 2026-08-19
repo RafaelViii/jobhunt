@@ -8,12 +8,14 @@ import { Chip } from "@/components/ui/Chip";
 import { ApplyButton } from "@/components/applications/ApplyButton";
 import { Card } from "@/components/ui/Card";
 import { CategoryBanner } from "@/components/matches/CategoryBanner";
+import { VerifiedBadgeIcon } from "@/components/ui/icons";
 
 export function JobPostCard({
   jobId,
   title,
   companyName,
   companyLogoUrl,
+  companyVerified,
   bannerUrl,
   location,
   remote,
@@ -26,6 +28,7 @@ export function JobPostCard({
   title: string;
   companyName: string;
   companyLogoUrl?: string | null;
+  companyVerified?: boolean;
   bannerUrl?: string | null;
   location: string;
   remote: boolean;
@@ -51,8 +54,15 @@ export function JobPostCard({
             <Link href={`/applicant/jobs/${jobId}`} className="font-semibold text-ink hover:underline">
               {title}
             </Link>
-            <p className="text-xs text-muted">
-              {companyName} · {location}
+            <p className="flex items-center gap-1 text-xs text-muted">
+              {companyName}
+              {companyVerified && (
+                <span title="Verified business">
+                  <VerifiedBadgeIcon className="h-3.5 w-3.5 shrink-0 text-brand" />
+                </span>
+              )}
+              {" · "}
+              {location}
               {remote ? " · Remote-friendly" : ""}
             </p>
           </div>

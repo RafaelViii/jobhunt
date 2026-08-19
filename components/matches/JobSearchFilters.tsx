@@ -224,6 +224,7 @@ export function JobSearchFilters({
               title={match.job.title}
               companyName={match.companyName}
               companyLogoUrl={match.companyLogoUrl}
+              companyVerified={match.companyVerified}
               bannerUrl={match.job.bannerUrl}
               location={match.job.location}
               remote={match.job.remote}

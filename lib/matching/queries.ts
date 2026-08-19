@@ -14,6 +14,7 @@ export type ApplicantMatchView = {
   job: JobDoc;
   companyName: string;
   companyLogoUrl: string | null;
+  companyVerified: boolean;
 };
 
 export async function getMatchesForApplicant(applicantUid: string): Promise<ApplicantMatchView[]> {
@@ -42,6 +43,7 @@ export async function getMatchesForApplicant(applicantUid: string): Promise<Appl
         job,
         companyName: company?.name ?? "Unknown company",
         companyLogoUrl: company?.logoUrl ?? null,
+        companyVerified: company?.verification?.status === "verified",
       };
     }),
   );

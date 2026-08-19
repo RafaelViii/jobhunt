@@ -12,6 +12,7 @@ import { Avatar } from "@/components/nav/Avatar";
 import { SidebarCard } from "@/components/nav/SidebarCard";
 import { BackButton } from "@/components/ui/BackButton";
 import { CategoryBanner } from "@/components/matches/CategoryBanner";
+import { VerifiedBadgeIcon } from "@/components/ui/icons";
 import type { CompanyDoc, JobDoc } from "@/lib/types";
 
 export default async function ApplicantJobDetailPage({ params }: { params: Promise<{ jobId: string }> }) {
@@ -29,6 +30,7 @@ export default async function ApplicantJobDetailPage({ params }: { params: Promi
 
   const match = await getMatchForApplicantAndJob(session.uid, jobId);
   const alreadyApplied = await hasApplied(session.uid, jobId);
+  const companyVerified = company?.verification?.status === "verified";
 
   return (
     <div className="mx-auto flex max-w-5xl gap-6 px-4 py-8">
@@ -46,8 +48,15 @@ export default async function ApplicantJobDetailPage({ params }: { params: Promi
             <Avatar name={company?.name ?? "?"} photoUrl={company?.logoUrl} size={48} />
             <div>
               <h1 className="text-xl font-bold text-ink">{job.title}</h1>
-              <p className="text-sm text-muted">
-                {company?.name ?? "Unknown company"} · {job.location}
+              <p className="flex flex-wrap items-center gap-1 text-sm text-muted">
+                {company?.name ?? "Unknown company"}
+                {companyVerified && (
+                  <span title="Verified business">
+                    <VerifiedBadgeIcon className="h-3.5 w-3.5 shrink-0 text-brand" />
+                  </span>
+                )}
+                {" · "}
+                {job.location}
                 {job.remote ? " · Remote-friendly" : ""}
               </p>
             </div>
@@ -112,6 +121,7 @@ export default async function ApplicantJobDetailPage({ params }: { params: Promi
             name={company?.name ?? "Unknown company"}
             subtitle={company?.industry}
             photoUrl={company?.logoUrl}
+            verified={companyVerified}
             meta={[
               { label: "Size", value: company?.size || "—" },
               { label: "Location", value: job.location },
