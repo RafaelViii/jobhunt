@@ -11,6 +11,7 @@ export type SessionUser = {
   uid: string;
   email: string | null;
   role: Role | null;
+  emailVerified: boolean;
 };
 
 // idToken is the short-lived token from the client SDK right after sign-in/sign-up.
@@ -42,5 +43,6 @@ export function decodedTokenToSessionUser(decoded: DecodedIdToken): SessionUser 
     uid: decoded.uid,
     email: decoded.email ?? null,
     role: role === "applicant" || role === "recruiter" ? role : null,
+    emailVerified: decoded.email_verified ?? false,
   };
 }

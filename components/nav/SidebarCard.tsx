@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Avatar } from "@/components/nav/Avatar";
 import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
+import { VerifiedBadgeIcon } from "@/components/ui/icons";
 
 export type SidebarLink = { href: string; label: string };
 
@@ -9,6 +10,7 @@ export function SidebarCard({
   name,
   subtitle,
   photoUrl,
+  verified,
   meta,
   experience,
   links = [],
@@ -16,6 +18,7 @@ export function SidebarCard({
   name: string;
   subtitle?: string | null;
   photoUrl?: string | null;
+  verified?: boolean;
   meta?: { label: string; value: string }[];
   experience?: { title: string; company: string; period?: string; current?: boolean } | null;
   links?: SidebarLink[];
@@ -27,7 +30,14 @@ export function SidebarCard({
         <div className="-mt-8 mb-2 rounded-full ring-4 ring-surface">
           <Avatar name={name} photoUrl={photoUrl} size={64} />
         </div>
-        <p className="font-semibold text-ink">{name}</p>
+        <p className="flex items-center gap-1.5 font-semibold text-ink">
+          {name}
+          {verified && (
+            <span title="Email verified">
+              <VerifiedBadgeIcon className="h-4 w-4 shrink-0 text-brand" />
+            </span>
+          )}
+        </p>
         {subtitle && <p className="mt-0.5 text-xs text-muted">{subtitle}</p>}
       </div>
 

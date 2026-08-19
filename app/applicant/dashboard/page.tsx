@@ -33,6 +33,7 @@ export default async function ApplicantDashboardPage() {
             name={profile?.basicInfo.name || session.email || "Account"}
             subtitle={profile?.basicInfo.location}
             photoUrl={profile?.basicInfo.photoUrl}
+            verified={session.emailVerified}
             meta={[
               { label: "Skills listed", value: String(profile?.skills.length ?? 0) },
               { label: "Matches", value: String(matches.length) },
