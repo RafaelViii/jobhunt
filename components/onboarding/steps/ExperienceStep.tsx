@@ -2,6 +2,8 @@
 
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
+import { TitleCombobox } from "@/components/ui/TitleCombobox";
+import { ALL_EXPERIENCE_TITLES } from "@/lib/matching/experienceTitles";
 import type { ExperienceEntry } from "@/lib/types";
 
 const EMPTY_ENTRY: ExperienceEntry = {
@@ -35,11 +37,11 @@ export function ExperienceStep({
       {value.map((entry, index) => (
         <div key={index} className="flex flex-col gap-2 rounded-md border border-line bg-page p-3">
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <Input
-              type="text"
+            <TitleCombobox
               placeholder="Job title"
               value={entry.title}
-              onChange={(e) => updateEntry(index, { title: e.target.value })}
+              onChange={(title) => updateEntry(index, { title })}
+              suggestions={ALL_EXPERIENCE_TITLES}
             />
             <Input
               type="text"

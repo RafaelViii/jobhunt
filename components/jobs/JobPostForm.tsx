@@ -11,6 +11,8 @@ import { Select } from "@/components/ui/Select";
 import { Label } from "@/components/ui/Label";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { TitleCombobox } from "@/components/ui/TitleCombobox";
+import { ALL_EXPERIENCE_TITLES } from "@/lib/matching/experienceTitles";
 
 const DEFAULT_STATE: CreateJobInput = {
   title: "",
@@ -65,7 +67,12 @@ export function JobPostForm({
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <Label>Job title</Label>
-            <Input type="text" required value={data.title} onChange={(e) => setData({ ...data, title: e.target.value })} />
+            <TitleCombobox
+              required
+              value={data.title}
+              onChange={(title) => setData({ ...data, title })}
+              suggestions={ALL_EXPERIENCE_TITLES}
+            />
           </div>
 
           <div>

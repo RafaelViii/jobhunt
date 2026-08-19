@@ -2,6 +2,7 @@
 
 import { TagInput } from "@/components/onboarding/TagInput";
 import { EMPLOYMENT_TYPES, SENIORITIES } from "@/lib/constants";
+import { ALL_EXPERIENCE_TITLES } from "@/lib/matching/experienceTitles";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { Select } from "@/components/ui/Select";
@@ -33,6 +34,7 @@ export function PreferencesStep({
         values={value.titles}
         onChange={(titles) => onChange({ ...value, titles })}
         placeholder="e.g. Frontend Engineer"
+        suggestions={ALL_EXPERIENCE_TITLES}
       />
 
       <TagInput

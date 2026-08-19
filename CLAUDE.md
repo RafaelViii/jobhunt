@@ -65,6 +65,8 @@ score = 100 × (0.25·title + 0.30·skills + 0.15·location + 0.10·salary + 0.1
 ### 5.1 Synonym map
 Store title synonyms as a JSON file in the repo (e.g. `/lib/matching/title-synonyms.json`), not a database collection — it's static reference data, not user data. Keep it small and curated (10–20 common title groups is enough for demo data).
 
+*(Deviation, 2026-08-19: expanded to 67 groups — the original 32 hand-curated groups plus 35 categories generated from a comprehensive predefined title list covering common Philippines remote/BPO job titles, stored source-of-truth as `/lib/matching/experience-titles.json` (category → title array) and flattened for UI autocomplete via `/lib/matching/experienceTitles.ts`. Still a static JSON lookup with no Firestore involvement, so the architecture is unchanged — only the size. Driven directly by user request: applicants and recruiters both get a free-text input with a type-ahead suggestion dropdown sourced from this list — `TitleCombobox` for single-value fields (experience entry title, job posting title), and `TagInput`'s new optional `suggestions` prop for the multi-value "Desired titles" preference field — so that picking a standardized title from the list (rather than typing an idiosyncratic one) reliably lands an exact or synonym-group title match. Custom free text is always still allowed on every field; nothing is a locked `<select>`.)*
+
 ### 5.2 Where the scoring function lives
 One pure function, e.g. `computeMatchScore(applicantProfile, job): { score, breakdown }` in `/lib/matching/score.ts`. No side effects, no Firestore calls inside it — just math, so it's trivially unit-testable. All recompute call sites (§7) call this function and then write the result.
 
