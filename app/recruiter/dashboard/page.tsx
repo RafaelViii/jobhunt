@@ -53,6 +53,17 @@ export default async function RecruiterDashboardPage() {
           </Link>
         </div>
 
+        {company.verification?.status !== "verified" && (
+          <div className="flex items-center justify-between gap-4 rounded-md border border-line bg-brand-soft px-4 py-3">
+            <p className="text-sm text-ink">
+              Verify your business to post jobs — takes about a minute.
+            </p>
+            <Link href="/recruiter/verify" className="shrink-0 text-sm font-semibold text-brand hover:underline">
+              Verify now
+            </Link>
+          </div>
+        )}
+
         {jobsWithCounts.length === 0 && (
           <EmptyState
             icon={<BriefcaseIcon className="h-12 w-12" />}

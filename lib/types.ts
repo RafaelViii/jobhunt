@@ -61,6 +61,22 @@ export type ApplicantProfileDoc = {
   onboardingComplete: boolean;
 };
 
+export type VerificationDocumentType = "business_permit" | "government_id";
+
+// Not a real verification integration — see CLAUDE.md §11a. status flips
+// straight from "unverified" to "verified" once a document is submitted;
+// this models the gate a real business-permit/ID verification API would
+// enforce, without one actually being wired up.
+export type CompanyVerification = {
+  status: "unverified" | "verified";
+  documentType: VerificationDocumentType | null;
+  // Private-bucket storage path (verification-docs), not a public URL —
+  // same pattern as ApplicantProfileDoc.resumeUrl.
+  documentPath: string | null;
+  submittedAt: number | null;
+  verifiedAt: number | null;
+};
+
 export type CompanyDoc = {
   name: string;
   logoUrl: string | null;
@@ -68,6 +84,7 @@ export type CompanyDoc = {
   industry: string;
   size: string;
   recruiterUids: string[];
+  verification: CompanyVerification;
 };
 
 export type JobStatus = "open" | "closed";

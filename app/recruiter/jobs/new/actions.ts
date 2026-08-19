@@ -15,6 +15,10 @@ export async function createJob(input: CreateJobInput): Promise<void> {
 
   const company = await getCompanyForRecruiter(session.uid);
   if (!company) redirect("/recruiter/onboarding");
+  // Defense in depth — the /recruiter/jobs/new page already redirects
+  // unverified recruiters, but a Server Action can be invoked directly, so
+  // the actual write path enforces this too, not just the page.
+  if (company.verification?.status !== "verified") redirect("/recruiter/verify");
 
   const jobDoc: JobDoc = {
     ...input,

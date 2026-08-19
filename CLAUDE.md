@@ -109,9 +109,10 @@ If you add a new field that affects scoring, grep for both function names before
 - **Recruiters need read access to applicant data outside their own account** — specifically, the resume/profile of any applicant who applied to or matched with one of their jobs. This is the trickiest rule to write correctly: it requires a `get()` on the related `application` (or `matches`) doc inside the rule to verify the relationship, not a flat "owner only" rule. Do not skip this — and do not over-grant (recruiters should not be able to read arbitrary applicant profiles they have no relationship to).
 
 ### Storage (Supabase, not Firebase — see §3)
-Two buckets:
+Three buckets:
 - `resumes` (private, no public access). Reads happen only through short-lived signed URLs minted server-side by a Route Handler using the Supabase service-role key, after that handler checks the same relationship rule as Firestore's `matches`/`applications`: the owning applicant, or a recruiter with a qualifying application/match to that applicant. Uploads are server-side only (service-role key) — never a direct client upload, and never a bucket-level public-read policy.
 - `public-assets` (profile photos, company logos): public read is fine (not sensitive). Uploads still go through a server-side Route Handler with a basic owner check, rather than direct client writes, to avoid an open write policy.
+- `verification-docs` (added 2026-08-19, see §11a) — private, same posture as `resumes`: business permits and government IDs are never public-read. No signed-URL read path exists yet since nothing in the current UI displays an uploaded document back (the verification is simulated and always succeeds); add one the same way `getSignedResumeUrl` works if a review UI is ever built.
 
 ## 9. Route / page structure
 
@@ -127,6 +128,7 @@ Two buckets:
 /applicant/profile         edit -> regenerates resume
 /recruiter/onboarding      company profile
 /recruiter/dashboard       posted jobs + candidate previews
+/recruiter/verify          business permit/ID upload — see §11a; gates /recruiter/jobs/new
 /recruiter/jobs/new
 /recruiter/jobs/[jobId]/edit
 /recruiter/jobs/[jobId]/candidates   ranked applicant list
@@ -144,9 +146,21 @@ Role-based redirect after login: read `users/{uid}.role` in Next.js middleware, 
 
 **Phase 3 — Dashboards:** Applicant dashboard (query `matches`, show % + breakdown chips), recruiter dashboard (query `matches` per job, candidate list with resume preview).
 
-**Phase 4 — Applications + status:** One-click apply (snapshots resume, creates `applications` doc), recruiter status pipeline (shortlist/interview/offer/reject), applicant "My Applications" tracker reflecting status changes.
+**Phase 4 — Applications + status:** One-click apply (snapshots resume, creates `applications` doc), recruiter status pipeline (submitted → shortlisted → interview → rejected — see §11a's dated note on "offer" being dropped), applicant "My Applications" tracker reflecting status changes.
 
 **Phase 5 — Polish:** Firestore + Storage security rules (§8), composite indexes (§4), final pass on seeded data variety, defense/demo dry run.
+
+## 11a. Recruiter verification gate (added 2026-08-19 — not in the original plan)
+
+Recruiters must submit a business permit or a government-issued ID before they can post a job — the platform is meant to be trustworthy on both sides (applicants trusting who's hiring, recruiters trusting who's applying), and an unverified recruiter posting jobs undermines that. Explicit user requirement: *"if the recruiter account doesn't upload any documents it should not allow to post job."*
+
+**This is not a real verification integration.** A real business-permit/government-ID verification API is a serious, paid, KYB/KYC-grade integration — entirely out of scope for a thesis demo. Instead, the flow *simulates* what that gate would feel like:
+
+- `CompanyDoc.verification: { status: "unverified" | "verified", documentType: "business_permit" | "government_id" | null, documentPath, submittedAt, verifiedAt }` (`lib/types.ts`). New companies start `"unverified"` (set in `createCompany`, `app/recruiter/onboarding/actions.ts`).
+- Gate placement: **not** part of onboarding — a recruiter reaches their dashboard immediately after creating a company. The gate triggers the first time they try to post a job. `/recruiter/jobs/new` (both the page and the `createJob` Server Action — defense in depth, same reasoning as `recruiterOwnsJob` elsewhere) redirect to `/recruiter/verify` if `company.verification?.status !== "verified"`. Everything else on the dashboard (editing company info, viewing existing jobs/applicants) stays open.
+- `/recruiter/verify` (`components/verification/VerificationForm.tsx`): recruiter picks a document type, uploads a file, submits. **Always succeeds** — there is no real check, no chance of rejection. The upload goes to a new private Supabase bucket, `verification-docs` (`VERIFICATION_DOCS_BUCKET` in `lib/supabase/admin.ts`) — private for the same reason `resumes` is: a business permit or a government ID is exactly the kind of document that should never be public-read, thesis demo or not. The upload route (`app/api/uploads/verification-doc/route.ts`) is separate from the existing `public-asset` route because that one only serves the public bucket.
+- The client component plays a scripted "Processing… → Verifying documents… → Confirming… → Verified" sequence over a few seconds before redirecting to `/recruiter/jobs/new` — purely cosmetic pacing, not tied to any real async check. The form itself says outright, in the UI, that this is a thesis demo and no document is actually reviewed.
+- **Every existing company in the seed data and in production Firestore as of 2026-08-19 was migrated to `verified`** (a company that already has jobs posted obviously predates this gate — leaving it `"unverified"` would incorrectly lock out an already-established seeded/real account). New companies going forward start `"unverified"` as normal. All four `company.verification` reads use optional chaining (`company.verification?.status`) rather than assuming the field exists, since Firestore won't retroactively enforce the TypeScript type on documents written before this field existed.
 
 ## 11. Common mistakes to avoid (checked against this plan)
 

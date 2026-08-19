@@ -1606,6 +1606,17 @@ async function seedCompanies() {
       industry: company.industry,
       size: company.size,
       recruiterUids: [recruiterUid],
+      // Pre-verified: these companies already have seeded jobs posted
+      // directly (bypassing createJob's verification gate), so leaving
+      // them "unverified" would confusingly block posting a new job
+      // through a seeded recruiter account that already looks established.
+      verification: {
+        status: "verified",
+        documentType: "business_permit",
+        documentPath: null,
+        submittedAt: Date.now(),
+        verifiedAt: Date.now(),
+      },
     });
 
     companyIdByKey[company.key] = { companyId: companyRef.id, recruiterUid };

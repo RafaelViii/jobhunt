@@ -12,6 +12,10 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 export const RESUMES_BUCKET = "resumes";
 export const PUBLIC_ASSETS_BUCKET = "public-assets";
+// Private, like RESUMES_BUCKET — business permits/government IDs are
+// exactly the kind of document that shouldn't be public-read even in a
+// thesis demo where the verification itself isn't real. See CLAUDE.md §11a.
+export const VERIFICATION_DOCS_BUCKET = "verification-docs";
 
 let cachedClient: SupabaseClient | undefined;
 
