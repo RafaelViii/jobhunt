@@ -46,3 +46,6 @@ next-env.d.ts
 
 # claude code local session state
 .claude/
+
+# one-off Firestore data exports for thesis documentation — regenerable, not app code
+/exports/

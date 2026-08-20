@@ -5,7 +5,7 @@
 // instead of erroring, so you can re-seed after tweaking data without first
 // wiping the project by hand.
 //
-// Seeds 12 companies (1 recruiter each), 32 jobs, and 28 applicants, per
+// Seeds 20 companies (1 recruiter each), 48 jobs, and 30 applicants, per
 // CLAUDE.md §4. The applicant/job pairings are deliberately uneven — some
 // near-perfect matches, some partial (one axis off: title synonym, skill
 // overlap, location, salary, or seniority), some poor — so Phase 2 scoring
@@ -16,6 +16,12 @@
 // customer support, creative, marketing, e-commerce ops, bookkeeping,
 // online tutoring) — added because the seed data previously skewed entirely
 // toward software engineering titles.
+//
+// 2026-08-21: expanded again to 20 companies / 30 applicants (from 12/28) —
+// explicit user request for a larger, industry-diverse seed after purging
+// all real test accounts (bad/inappropriate manual test input) from
+// production Firestore. Added 8 companies spanning software, BPO, design,
+// logistics, healthcare, real estate, legal, and HR/recruitment.
 
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
@@ -176,6 +182,78 @@ const COMPANIES = [
     website: "https://brightpathtutors.example.test",
     recruiterEmail: "recruiter.brightpath@jobhunt.test",
     recruiterName: "Recruiter — BrightPath Tutors",
+  },
+  {
+    key: "meridian",
+    name: "Meridian Tech Solutions",
+    industry: "Software",
+    size: "51-200",
+    website: "https://meridiantech.example.test",
+    recruiterEmail: "recruiter.meridian@jobhunt.test",
+    recruiterName: "Recruiter — Meridian Tech Solutions",
+  },
+  {
+    key: "bayanihan",
+    name: "Bayanihan BPO Group",
+    industry: "BPO & Call Center",
+    size: "201-500",
+    website: "https://bayanihanbpo.example.test",
+    recruiterEmail: "recruiter.bayanihan@jobhunt.test",
+    recruiterName: "Recruiter — Bayanihan BPO Group",
+  },
+  {
+    key: "sunburst",
+    name: "Sunburst Design Studio",
+    industry: "Design & Creative Agency",
+    size: "11-50",
+    website: "https://sunburstdesign.example.test",
+    recruiterEmail: "recruiter.sunburst@jobhunt.test",
+    recruiterName: "Recruiter — Sunburst Design Studio",
+  },
+  {
+    key: "primelogistics",
+    name: "Prime Logistics PH",
+    industry: "Logistics & Supply Chain",
+    size: "201-500",
+    website: "https://primelogisticsph.example.test",
+    recruiterEmail: "recruiter.primelogistics@jobhunt.test",
+    recruiterName: "Recruiter — Prime Logistics PH",
+  },
+  {
+    key: "wellnesscare",
+    name: "Wellness Care Clinic",
+    industry: "Healthcare",
+    size: "51-200",
+    website: "https://wellnesscareclinic.example.test",
+    recruiterEmail: "recruiter.wellnesscare@jobhunt.test",
+    recruiterName: "Recruiter — Wellness Care Clinic",
+  },
+  {
+    key: "coastalrealty",
+    name: "Coastal Realty Group",
+    industry: "Real Estate",
+    size: "11-50",
+    website: "https://coastalrealtygroup.example.test",
+    recruiterEmail: "recruiter.coastalrealty@jobhunt.test",
+    recruiterName: "Recruiter — Coastal Realty Group",
+  },
+  {
+    key: "apexlegal",
+    name: "Apex Legal Partners",
+    industry: "Legal & Professional Services",
+    size: "11-50",
+    website: "https://apexlegalpartners.example.test",
+    recruiterEmail: "recruiter.apexlegal@jobhunt.test",
+    recruiterName: "Recruiter — Apex Legal Partners",
+  },
+  {
+    key: "brighthr",
+    name: "BrightHR Consulting",
+    industry: "HR & Recruitment",
+    size: "11-50",
+    website: "https://brighthrconsulting.example.test",
+    recruiterEmail: "recruiter.brighthr@jobhunt.test",
+    recruiterName: "Recruiter — BrightHR Consulting",
   },
 ];
 
@@ -1147,6 +1225,489 @@ Fully remote, you set your own available lesson slots.`,
     employmentType: "part-time",
     seniority: "junior",
   },
+
+  // --- Second wave of companies (2026-08-21), for a 20-recruiter / 30-applicant seed scale ---
+
+  {
+    companyKey: "meridian",
+    title: "Full-Stack Developer",
+    description: `Meridian Tech Solutions builds custom web platforms for mid-sized businesses across logistics, finance, and healthcare — usually the system a client's whole operation runs on, not a marketing site.
+
+We're hiring a Full-Stack Developer to work across our React/Node.js stack on client projects, from database schema to the screens end users actually touch.
+
+What you'll do:
+• Build features end-to-end across a React/TypeScript frontend and a Node.js/PostgreSQL backend
+• Work directly with client stakeholders during discovery to turn vague requirements into a real spec
+• Write and maintain automated tests for the features you ship
+• Review teammates' code and give feedback that actually gets acted on
+• Rotate across 2-3 active client projects rather than owning just one indefinitely
+
+What we're looking for:
+• 3+ years building production web applications across both frontend and backend
+• Comfortable with PostgreSQL schema design, not just writing queries against one someone else designed
+• Can talk to a non-technical client without either dumbing it down or losing them
+• Experience with Git-based code review workflows
+• Bonus: prior agency or client-services experience
+
+Office in Manila, hybrid — 2 days in-office per week.`,
+    skills: ["React", "Node.js", "TypeScript", "PostgreSQL"],
+    location: "Manila",
+    remote: false,
+    salaryMin: 60000,
+    salaryMax: 85000,
+    employmentType: "full-time",
+    seniority: "mid",
+  },
+  {
+    companyKey: "meridian",
+    title: "DevOps Engineer",
+    description: `Meridian Tech Solutions builds custom web platforms for mid-sized businesses across logistics, finance, and healthcare — usually the system a client's whole operation runs on, not a marketing site.
+
+We're hiring a DevOps Engineer to own deployment pipelines and infrastructure across our growing portfolio of client applications, most of them running on AWS.
+
+What you'll do:
+• Build and maintain CI/CD pipelines so client deploys are routine, not stressful
+• Manage AWS infrastructure (EC2, RDS, S3) across multiple client environments
+• Set up monitoring and alerting so we catch production issues before clients do
+• Containerize legacy applications that are still deployed by hand today
+• Document infrastructure decisions so the whole team isn't dependent on one person's memory
+
+What we're looking for:
+• 2+ years in a DevOps, SRE, or infrastructure-focused engineering role
+• Hands-on AWS experience, not just certifications
+• Comfortable with Docker and at least one CI/CD tool (GitHub Actions, Jenkins, GitLab CI)
+• Can explain an infrastructure tradeoff to a developer who isn't a DevOps specialist
+• Bonus: Terraform or other infrastructure-as-code experience
+
+Office in Manila, hybrid — 2 days in-office per week.`,
+    skills: ["AWS", "Docker", "CI/CD", "DevOps Engineer"],
+    location: "Manila",
+    remote: false,
+    salaryMin: 65000,
+    salaryMax: 95000,
+    employmentType: "full-time",
+    seniority: "senior",
+  },
+  {
+    companyKey: "bayanihan",
+    title: "Call Center Agent",
+    description: `Bayanihan BPO Group runs inbound and outbound support programs for US and Australian retail and telecom brands — one of the larger BPO employers in Cebu.
+
+We're hiring Call Center Agents for a growing telecom support program, handling billing questions, plan changes, and troubleshooting over the phone.
+
+What you'll do:
+• Answer inbound calls from customers about billing, plan changes, and service issues
+• Follow account-verification and troubleshooting scripts while still sounding like a human
+• Log every call accurately in the client's CRM
+• Escalate technical issues you can't resolve to the right internal team
+• Hit call-quality and average-handle-time targets without sacrificing customer experience
+
+What we're looking for:
+• Clear spoken English and comfort on the phone for a full shift
+• 6+ months of call center or customer-facing experience is a plus, not required — we train
+• Comfortable with rotating shifts, including night shift for the AU/US time zones
+• Even temperament under a high call volume
+• Basic computer literacy (typing while talking, navigating a CRM)
+
+On-site in our Cebu office, with a shift differential for night shifts.`,
+    skills: ["Call Handling", "Customer Service", "CRM", "Communication"],
+    location: "Cebu",
+    remote: false,
+    salaryMin: 22000,
+    salaryMax: 30000,
+    employmentType: "full-time",
+    seniority: "junior",
+  },
+  {
+    companyKey: "bayanihan",
+    title: "Technical Account Associate",
+    description: `Bayanihan BPO Group runs inbound and outbound support programs for US and Australian retail and telecom brands — one of the larger BPO employers in Cebu.
+
+We're hiring a Technical Account Associate for a program supporting a US-based internet/cable provider — deeper technical troubleshooting than a standard queue, with more account ownership.
+
+What you'll do:
+• Diagnose internet and equipment issues over phone and chat, walking non-technical customers through fixes
+• Own escalated accounts through to resolution rather than passing them along
+• Coordinate with field technicians when a truck roll is genuinely needed
+• Identify recurring hardware issues and flag them for the client's product team
+• Mentor newer agents on the technical side of the queue
+
+What we're looking for:
+• 1+ years in technical support or a related BPO technical queue
+• Comfortable troubleshooting networking/equipment issues over the phone without a visual
+• Strong ownership mentality — you don't pass a hard case along just because it's hard
+• Experience with ticketing systems (Zendesk, Salesforce Service Cloud, or similar)
+• Bonus: basic networking certification or equivalent hands-on knowledge
+
+On-site in our Cebu office, rotating shifts to match US business hours.`,
+    skills: ["Technical Support", "Troubleshooting", "Ticketing Systems", "Networking Basics"],
+    location: "Cebu",
+    remote: false,
+    salaryMin: 28000,
+    salaryMax: 38000,
+    employmentType: "full-time",
+    seniority: "mid",
+  },
+  {
+    companyKey: "sunburst",
+    title: "UI/UX Designer",
+    description: `Sunburst Design Studio designs digital products for startups — mostly web and mobile app interfaces, from early wireframes through to a shippable design system.
+
+We're hiring a UI/UX Designer to work across a handful of startup clients, taking a product from a rough idea to a polished, usable interface.
+
+What you'll do:
+• Run lightweight user research and turn findings into wireframes and flows
+• Design high-fidelity UI in Figma, including a basic component/design system per client
+• Prototype interactions well enough for a client to actually feel how a feature will work
+• Present design decisions to founders and defend them with reasoning, not just taste
+• Hand off clean, well-organized files to engineering and stay available through implementation
+
+What we're looking for:
+• A portfolio showing full product design work — not just visual polish, but how you got there
+• Strong Figma skills, including auto-layout and component systems
+• Comfortable working directly with non-design founders who may push back on your calls
+• Basic understanding of what's actually feasible to build, so you're not designing fantasy screens
+• Bonus: front-end coding literacy (HTML/CSS) to speak the engineers' language
+
+Fully remote, with weekly client presentation calls.`,
+    skills: ["Figma", "UI Design", "UX Research", "Prototyping"],
+    location: "Remote",
+    remote: true,
+    salaryMin: 35000,
+    salaryMax: 50000,
+    employmentType: "full-time",
+    seniority: "mid",
+  },
+  {
+    companyKey: "sunburst",
+    title: "Motion Graphics Designer",
+    description: `Sunburst Design Studio designs digital products for startups — mostly web and mobile app interfaces, from early wireframes through to a shippable design system.
+
+We're hiring a Motion Graphics Designer to produce short product-explainer animations and marketing motion assets for our startup clients' launches.
+
+What you'll do:
+• Animate UI flows and product explainer videos from static design files
+• Create short marketing motion graphics for launch campaigns and social ads
+• Keep animation style consistent with each client's existing brand and design system
+• Turn around quick-response animated assets on tight launch timelines
+• Organize and hand off source files cleanly for future reuse
+
+What we're looking for:
+• A reel showing UI/product animation, not just general motion design
+• Strong After Effects skills; Lottie/Rive export experience is a real plus
+• Comfortable animating from someone else's static Figma designs, not just your own concepts
+• Able to work against real launch deadlines without needing constant hand-holding
+• Bonus: basic illustration skills for custom icon/asset creation
+
+Fully remote, project-based workload.`,
+    skills: ["After Effects", "Motion Graphics", "Lottie", "Animation"],
+    location: "Remote",
+    remote: true,
+    salaryMin: 30000,
+    salaryMax: 45000,
+    employmentType: "contract",
+    seniority: "mid",
+  },
+  {
+    companyKey: "primelogistics",
+    title: "Logistics Coordinator",
+    description: `Prime Logistics PH coordinates freight and last-mile delivery for e-commerce and retail clients across Luzon — the team that makes sure a promised delivery date is actually a real one.
+
+We're hiring a Logistics Coordinator to manage day-to-day shipment coordination between our warehouse, carriers, and clients.
+
+What you'll do:
+• Schedule and track shipments across multiple carriers, catching delays before the client has to ask
+• Coordinate with warehouse staff on pick/pack timing against carrier pickup windows
+• Communicate proactively with clients about delays or exceptions
+• Maintain accurate shipment records and reconcile them against carrier invoices
+• Flag recurring carrier performance issues to management
+
+What we're looking for:
+• 1+ years in logistics, supply chain, or freight coordination
+• Comfortable juggling multiple shipments and carriers at once without dropping any
+• Clear, calm communication for both internal teams and external clients
+• Basic Excel skills for tracking and reconciliation
+• Bonus: experience with a TMS (transportation management system)
+
+On-site at our Manila logistics hub, standard business hours with occasional early starts for carrier pickups.`,
+    skills: ["Logistics", "Shipping Coordination", "Excel", "Vendor Management"],
+    location: "Manila",
+    remote: false,
+    salaryMin: 26000,
+    salaryMax: 36000,
+    employmentType: "full-time",
+    seniority: "mid",
+  },
+  {
+    companyKey: "primelogistics",
+    title: "Warehouse Data Encoder",
+    description: `Prime Logistics PH coordinates freight and last-mile delivery for e-commerce and retail clients across Luzon — the team that makes sure a promised delivery date is actually a real one.
+
+We're hiring a Warehouse Data Encoder to keep inventory and shipment records accurate as goods move through our Manila warehouse.
+
+What you'll do:
+• Encode incoming and outgoing shipment records into our warehouse management system
+• Reconcile physical stock counts against system records and flag discrepancies
+• Support the logistics team with data pulls for daily shipment reports
+• Keep barcode/label records organized and accurate for fast picking
+• Follow a documented data-entry standard, and flag it when reality doesn't match the process
+
+What we're looking for:
+• Fast, accurate typing and strong attention to detail
+• Comfortable in Excel (basic formulas, sorting, filtering)
+• No WMS experience required — we'll train you on our specific system
+• Able to work on your feet in a warehouse environment part of the shift
+• Bonus: prior warehouse or inventory experience
+
+On-site at our Manila logistics hub.`,
+    skills: ["Data Entry", "Inventory Management", "Excel", "Attention to Detail"],
+    location: "Manila",
+    remote: false,
+    salaryMin: 20000,
+    salaryMax: 27000,
+    employmentType: "full-time",
+    seniority: "intern",
+  },
+  {
+    companyKey: "wellnesscare",
+    title: "Medical Virtual Assistant",
+    description: `Wellness Care Clinic runs a multi-branch outpatient clinic network in Metro Manila — the administrative team behind the scenes keeps appointments, records, and insurance claims running smoothly.
+
+We're hiring a Medical Virtual Assistant to support patient scheduling and records for our growing clinic network, working remotely alongside our on-site staff.
+
+What you'll do:
+• Schedule and confirm patient appointments across multiple clinic branches
+• Maintain accurate digital patient records in our clinic management system
+• Handle routine patient inquiries about appointments and basic billing questions
+• Coordinate with on-site staff when a patient's situation needs in-person follow-up
+• Follow strict confidentiality practices around patient information at all times
+
+What we're looking for:
+• Prior medical or healthcare administrative experience, even informal
+• Comfortable with scheduling software and basic data entry
+• Clear, warm phone and written communication — you're often a worried patient's first contact
+• Strong discretion with sensitive personal/medical information
+• Bonus: familiarity with Philippine HMO/insurance processes
+
+Fully remote, standard clinic business hours.`,
+    skills: ["Medical Terminology", "Patient Scheduling", "Data Entry", "Communication"],
+    location: "Remote",
+    remote: true,
+    salaryMin: 24000,
+    salaryMax: 32000,
+    employmentType: "full-time",
+    seniority: "junior",
+  },
+  {
+    companyKey: "wellnesscare",
+    title: "Healthcare Administrative Assistant",
+    description: `Wellness Care Clinic runs a multi-branch outpatient clinic network in Metro Manila — the administrative team behind the scenes keeps appointments, records, and insurance claims running smoothly.
+
+We're hiring a Healthcare Administrative Assistant to support our clinic managers with the recurring paperwork and coordination that keeps each branch running.
+
+What you'll do:
+• Process insurance/HMO claim paperwork and follow up on pending claims
+• Maintain organized digital and physical records per branch
+• Support clinic managers with vendor and supply coordination
+• Prepare simple monthly reports on appointment volume and claim status
+• Answer routine administrative inquiries from patients and staff
+
+What we're looking for:
+• Some healthcare administrative or general office admin experience
+• Comfortable with Excel and basic office software
+• Organized and detail-oriented — claims paperwork errors cost the clinic real money
+• Professional, calm communication with patients and insurance providers alike
+• Bonus: HMO/insurance claims processing experience specifically
+
+On-site at one of our Metro Manila clinic branches.`,
+    skills: ["Healthcare Administrative Assistant", "Data Entry", "Excel", "Communication"],
+    location: "Quezon City",
+    remote: false,
+    salaryMin: 22000,
+    salaryMax: 30000,
+    employmentType: "full-time",
+    seniority: "junior",
+  },
+  {
+    companyKey: "coastalrealty",
+    title: "Real Estate Virtual Assistant",
+    description: `Coastal Realty Group is a residential real estate brokerage serving the Davao and Mindanao markets — the VA team supports our agents so they can spend more time with clients and less on paperwork.
+
+We're hiring a Real Estate Virtual Assistant to support a small team of agents with listings, scheduling, and client follow-up.
+
+What you'll do:
+• Prepare and update property listings across our website and listing portals
+• Schedule property viewings and coordinate calendars for multiple agents
+• Follow up with leads on behalf of agents to keep them warm
+• Maintain our CRM with accurate client and property status
+• Prepare simple marketing materials for new listings from a template
+
+What we're looking for:
+• Some VA or real estate administrative experience, even informal
+• Comfortable with CRM tools and basic scheduling coordination
+• Clear written English for client-facing follow-up messages
+• Organized enough to track multiple agents' pipelines without mixing them up
+• Bonus: prior real estate industry exposure, Philippines or abroad
+
+Fully remote, standard business-hours availability.`,
+    skills: ["Real Estate CRM", "Property Listings", "Lead Generation", "Communication"],
+    location: "Remote",
+    remote: true,
+    salaryMin: 22000,
+    salaryMax: 30000,
+    employmentType: "full-time",
+    seniority: "junior",
+  },
+  {
+    companyKey: "coastalrealty",
+    title: "Property Listing Specialist",
+    description: `Coastal Realty Group is a residential real estate brokerage serving the Davao and Mindanao markets — the VA team supports our agents so they can spend more time with clients and less on paperwork.
+
+We're hiring a Property Listing Specialist to build out and maintain high-quality property listings across our website and third-party portals.
+
+What you'll do:
+• Write clear, appealing property descriptions from agent notes and raw photos
+• Edit and organize listing photos to a consistent standard
+• Publish and update listings across our site and partner portals accurately
+• Track which listings are underperforming and flag them for an agent refresh
+• Keep pricing and availability information current across all platforms
+
+What we're looking for:
+• An eye for what makes a property listing appealing without being misleading
+• Comfortable with basic photo editing (cropping, color correction)
+• Detail-oriented — wrong pricing or square footage creates real client problems
+• Some real estate or e-commerce listing experience is a plus
+• Bonus: basic HTML for portal listing formatting
+
+Fully remote, output-based workload.`,
+    skills: ["Property Listings", "Content Writing", "Photo Editing", "Data Entry"],
+    location: "Remote",
+    remote: true,
+    salaryMin: 23000,
+    salaryMax: 31000,
+    employmentType: "full-time",
+    seniority: "junior",
+  },
+  {
+    companyKey: "apexlegal",
+    title: "Legal Virtual Assistant",
+    description: `Apex Legal Partners is a boutique law firm in Makati handling corporate and family law cases — the VA team keeps case files, scheduling, and client communication organized so lawyers can focus on casework.
+
+We're hiring a Legal Virtual Assistant to support two of our associate lawyers with day-to-day case administration.
+
+What you'll do:
+• Organize and maintain digital case files with strict version control
+• Schedule client meetings, hearings, and internal case reviews
+• Draft routine correspondence for a lawyer's review before it goes out
+• Track filing deadlines and flag upcoming ones well in advance
+• Handle confidential client information with strict discretion
+
+What we're looking for:
+• Prior legal administrative or paralegal-adjacent experience
+• Excellent written English and attention to formatting/detail
+• Comfortable managing deadlines that have real legal consequences if missed
+• Strong discretion — you'll see confidential client information regularly
+• Bonus: paralegal training or coursework
+
+Fully remote, with core hours overlapping the firm's Makati office hours.`,
+    skills: ["Legal Research", "Document Review", "Scheduling", "Communication"],
+    location: "Remote",
+    remote: true,
+    salaryMin: 26000,
+    salaryMax: 36000,
+    employmentType: "full-time",
+    seniority: "mid",
+  },
+  {
+    companyKey: "apexlegal",
+    title: "Legal Research Assistant",
+    description: `Apex Legal Partners is a boutique law firm in Makati handling corporate and family law cases — the VA team keeps case files, scheduling, and client communication organized so lawyers can focus on casework.
+
+We're hiring a Legal Research Assistant to support our associates with case research and document preparation.
+
+What you'll do:
+• Research case law and statutes relevant to active cases, under a lawyer's direction
+• Summarize research findings clearly for a lawyer who doesn't have time to read the full source
+• Prepare drafts of routine legal documents from firm templates
+• Organize research findings and precedents for easy future reference
+• Fact-check citations and references before documents go out
+
+What we're looking for:
+• Strong research skills and comfort with legal databases or willingness to learn one quickly
+• Excellent written English — a research summary needs to be precise, not just readable
+• Some legal studies background (in progress or completed) is a strong plus
+• Meticulous about citation accuracy — a wrong citation undermines the whole document
+• Bonus: prior exposure to Philippine corporate or family law specifically
+
+Fully remote, standard business-hours availability.`,
+    skills: ["Legal Research", "Research", "Documentation Quality Assistant", "Writing"],
+    location: "Remote",
+    remote: true,
+    salaryMin: 24000,
+    salaryMax: 33000,
+    employmentType: "full-time",
+    seniority: "junior",
+  },
+  {
+    companyKey: "brighthr",
+    title: "HR Assistant",
+    description: `BrightHR Consulting provides outsourced HR support for small businesses that aren't big enough for a full in-house HR team yet.
+
+We're hiring an HR Assistant to support day-to-day HR administration for a handful of client accounts — onboarding, records, and routine employee questions.
+
+What you'll do:
+• Process new-hire onboarding paperwork for client companies
+• Maintain accurate employee records across multiple client accounts
+• Answer routine employee questions about leave, benefits, and policy
+• Support payroll data collection ahead of each client's pay cycle
+• Help draft and update basic HR policy documents from templates
+
+What we're looking for:
+• Some HR administrative experience, even at a single company
+• Comfortable managing sensitive employee information across multiple clients without mixing them up
+• Clear, professional communication with employees who may be stressed about HR issues
+• Organized — deadlines here (onboarding, payroll cutoffs) are real and recurring
+• Bonus: HR-related coursework or certification in progress
+
+Fully remote, standard business-hours availability.`,
+    skills: ["HR Data Entry Specialist", "Onboarding", "Employee Records Assistant", "Communication"],
+    location: "Remote",
+    remote: true,
+    salaryMin: 24000,
+    salaryMax: 32000,
+    employmentType: "full-time",
+    seniority: "junior",
+  },
+  {
+    companyKey: "brighthr",
+    title: "Recruitment Coordinator",
+    description: `BrightHR Consulting provides outsourced HR support for small businesses that aren't big enough for a full in-house HR team yet.
+
+We're hiring a Recruitment Coordinator to run hiring logistics for our client companies — scheduling, candidate communication, and pipeline tracking.
+
+What you'll do:
+• Schedule interviews across multiple client hiring pipelines
+• Keep candidates informed at every stage so nobody's left wondering what's next
+• Maintain an accurate applicant tracking system across several concurrent searches
+• Coordinate with client hiring managers on interview feedback and next steps
+• Draft and post job listings from a client's rough requirements
+
+What we're looking for:
+• Some recruitment coordination or HR administrative experience
+• Excellent organization — you're running several hiring pipelines in parallel
+• Clear, friendly candidate communication (a bad candidate experience reflects on the client)
+• Comfortable with an applicant tracking system, or a fast learner if you haven't used one
+• Bonus: experience recruiting for more than one industry at once
+
+Fully remote, standard business-hours availability.`,
+    skills: ["Recruitment Coordinator", "Applicant Tracking Systems", "Interview Scheduling", "Communication"],
+    location: "Remote",
+    remote: true,
+    salaryMin: 25000,
+    salaryMax: 34000,
+    employmentType: "full-time",
+    seniority: "mid",
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -1580,6 +2141,34 @@ const APPLICANTS = [
     salaryMax: 30000,
     employmentTypes: ["full-time", "part-time"],
     seniority: "intern",
+  }),
+
+  // --- Second wave (2026-08-21), matched against the new companies above ---
+  applicant({
+    name: "Diego Morales",
+    location: "Manila",
+    headline: "Full-Stack Developer",
+    company: "Prior Co",
+    skills: ["React", "Node.js", "TypeScript", "PostgreSQL", "AWS"],
+    titles: ["Full-Stack Developer", "Software Engineer"],
+    prefLocations: ["Manila", "Remote"],
+    salaryMin: 60000,
+    salaryMax: 85000,
+    employmentTypes: ["full-time"],
+    seniority: "mid",
+  }),
+  applicant({
+    name: "Angelica Ramos",
+    location: "Quezon City",
+    headline: "Medical Virtual Assistant",
+    company: "Prior Co",
+    skills: ["Medical Terminology", "Patient Scheduling", "Data Entry", "Communication"],
+    titles: ["Medical Virtual Assistant", "Healthcare Administrative Assistant"],
+    prefLocations: ["Remote", "Quezon City"],
+    salaryMin: 22000,
+    salaryMax: 32000,
+    employmentTypes: ["full-time"],
+    seniority: "junior",
   }),
 ];
 
