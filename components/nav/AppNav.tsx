@@ -5,13 +5,20 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar } from "@/components/nav/Avatar";
 import { clearSession } from "@/lib/firebase/client-session";
-import { BriefcaseIcon, InboxIcon, PlusIcon } from "@/components/ui/icons";
+import { BriefcaseIcon, CloseIcon, InboxIcon, InfoIcon, PlusIcon } from "@/components/ui/icons";
 
 // Server Components (the layouts rendering AppNav) can't pass a component
 // reference to a Client Component — functions don't cross the RSC
 // serialization boundary. A string key does, and gets resolved to the real
 // icon component here, entirely client-side.
 const NAV_ICONS = { briefcase: BriefcaseIcon, inbox: InboxIcon, plus: PlusIcon };
+
+const RESEARCHERS = [
+  "Erese, Darren N.",
+  "Delos Santos, Mark Clarence",
+  "Madrona, Rommel Rhien B.",
+  "Santillan, Arvin B.",
+];
 
 export type NavLink = { href: string; label: string; icon: keyof typeof NAV_ICONS };
 
@@ -31,6 +38,7 @@ export function AppNav({
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,6 +48,15 @@ export function AppNav({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (!aboutOpen) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setAboutOpen(false);
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [aboutOpen]);
 
   async function handleSignOut() {
     setOpen(false);
@@ -78,6 +95,17 @@ export function AppNav({
             })}
           </nav>
         </div>
+
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button
+            type="button"
+            onClick={() => setAboutOpen(true)}
+            aria-label="About the researchers"
+            className="flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-sm font-medium text-muted transition-colors hover:bg-page hover:text-ink sm:rounded-md"
+          >
+            <InfoIcon className="h-5 w-5 shrink-0" />
+            <span className="hidden sm:inline">About</span>
+          </button>
 
         <div ref={menuRef} className="relative">
           <button
@@ -123,7 +151,43 @@ export function AppNav({
             </div>
           )}
         </div>
+        </div>
       </div>
+
+      {aboutOpen && (
+        <div
+          className="fixed inset-0 z-30 flex items-center justify-center bg-ink/40 px-4"
+          onClick={() => setAboutOpen(false)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="About the researchers"
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-sm rounded-lg border border-line bg-surface p-5 shadow-lg"
+          >
+            <div className="mb-3 flex items-start justify-between gap-4">
+              <h2 className="text-base font-semibold text-ink">About the researchers</h2>
+              <button
+                type="button"
+                onClick={() => setAboutOpen(false)}
+                aria-label="Close"
+                className="rounded-md p-1 text-muted hover:bg-page hover:text-ink"
+              >
+                <CloseIcon className="h-4 w-4" />
+              </button>
+            </div>
+            <p className="mb-3 text-sm text-muted">
+              JobHunt is a thesis project developed by:
+            </p>
+            <ul className="space-y-1.5 text-sm text-ink">
+              {RESEARCHERS.map((researcher) => (
+                <li key={researcher}>{researcher}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
